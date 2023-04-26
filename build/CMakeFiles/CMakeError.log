@@ -1,0 +1,122 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-ta4c9d
+
+Run Build Command(s):C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_4726d/fast && C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\cmTC_4726d.dir\build.make CMakeFiles/cmTC_4726d.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-ta4c9d'
+Building C object CMakeFiles/cmTC_4726d.dir/src.c.obj
+C:\MinGW\bin\gcc.exe -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles\cmTC_4726d.dir\src.c.obj -c C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-ta4c9d\src.c
+C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-ta4c9d\src.c:1:21: fatal error: pthread.h: No such file or directory
+ #include <pthread.h>
+                     ^
+compilation terminated.
+CMakeFiles\cmTC_4726d.dir\build.make:76: recipe for target 'CMakeFiles/cmTC_4726d.dir/src.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTC_4726d.dir/src.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-ta4c9d'
+Makefile:126: recipe for target 'cmTC_4726d/fast' failed
+mingw32-make.exe: *** [cmTC_4726d/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-s1d5xg
+
+Run Build Command(s):C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_177b2/fast && C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\cmTC_177b2.dir\build.make CMakeFiles/cmTC_177b2.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-s1d5xg'
+Building C object CMakeFiles/cmTC_177b2.dir/CheckFunctionExists.c.obj
+C:\MinGW\bin\gcc.exe   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles\cmTC_177b2.dir\CheckFunctionExists.c.obj -c C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-s1d5xg\CheckFunctionExists.c
+Linking C executable cmTC_177b2.exe
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_177b2.dir\link.txt --verbose=1
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\cmTC_177b2.dir/objects.a
+C:\MinGW\bin\ar.exe qc CMakeFiles\cmTC_177b2.dir/objects.a @CMakeFiles\cmTC_177b2.dir\objects1
+C:\MinGW\bin\gcc.exe  -DCHECK_FUNCTION_EXISTS=pthread_create -Wl,--whole-archive CMakeFiles\cmTC_177b2.dir/objects.a -Wl,--no-whole-archive -o cmTC_177b2.exe -Wl,--out-implib,libcmTC_177b2.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_177b2.dir\linkLibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/6.3.0/../../../../mingw32/bin/ld.exe: cannot find -lpthreads
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_177b2.dir\build.make:99: recipe for target 'cmTC_177b2.exe' failed
+mingw32-make.exe[1]: *** [cmTC_177b2.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-s1d5xg'
+Makefile:126: recipe for target 'cmTC_177b2/fast' failed
+mingw32-make.exe: *** [cmTC_177b2/fast] Error 2
+
+
+
+Determining if the function pthread_create exists in the pthread failed with the following output:
+Change Dir: C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-sqbi8g
+
+Run Build Command(s):C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_70cdc/fast && C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\cmTC_70cdc.dir\build.make CMakeFiles/cmTC_70cdc.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-sqbi8g'
+Building C object CMakeFiles/cmTC_70cdc.dir/CheckFunctionExists.c.obj
+C:\MinGW\bin\gcc.exe   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles\cmTC_70cdc.dir\CheckFunctionExists.c.obj -c C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-sqbi8g\CheckFunctionExists.c
+Linking C executable cmTC_70cdc.exe
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_70cdc.dir\link.txt --verbose=1
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\cmTC_70cdc.dir/objects.a
+C:\MinGW\bin\ar.exe qc CMakeFiles\cmTC_70cdc.dir/objects.a @CMakeFiles\cmTC_70cdc.dir\objects1
+C:\MinGW\bin\gcc.exe  -DCHECK_FUNCTION_EXISTS=pthread_create -Wl,--whole-archive CMakeFiles\cmTC_70cdc.dir/objects.a -Wl,--no-whole-archive -o cmTC_70cdc.exe -Wl,--out-implib,libcmTC_70cdc.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_70cdc.dir\linkLibs.rsp
+c:/mingw/bin/../lib/gcc/mingw32/6.3.0/../../../../mingw32/bin/ld.exe: cannot find -lpthread
+collect2.exe: error: ld returned 1 exit status
+CMakeFiles\cmTC_70cdc.dir\build.make:99: recipe for target 'cmTC_70cdc.exe' failed
+mingw32-make.exe[1]: *** [cmTC_70cdc.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-sqbi8g'
+Makefile:126: recipe for target 'cmTC_70cdc/fast' failed
+mingw32-make.exe: *** [cmTC_70cdc/fast] Error 2
+
+
+
+Determining if the include file dinput.h exists failed with the following output:
+Change Dir: C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-jdnxmu
+
+Run Build Command(s):C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_5a8b8/fast && C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\cmTC_5a8b8.dir\build.make CMakeFiles/cmTC_5a8b8.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-jdnxmu'
+Building C object CMakeFiles/cmTC_5a8b8.dir/CheckIncludeFile.c.obj
+C:\MinGW\bin\gcc.exe    -o CMakeFiles\cmTC_5a8b8.dir\CheckIncludeFile.c.obj -c C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-jdnxmu\CheckIncludeFile.c
+C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-jdnxmu\CheckIncludeFile.c:1:20: fatal error: dinput.h: No such file or directory
+ #include <dinput.h>
+                    ^
+compilation terminated.
+CMakeFiles\cmTC_5a8b8.dir\build.make:76: recipe for target 'CMakeFiles/cmTC_5a8b8.dir/CheckIncludeFile.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTC_5a8b8.dir/CheckIncludeFile.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-jdnxmu'
+Makefile:126: recipe for target 'cmTC_5a8b8/fast' failed
+mingw32-make.exe: *** [cmTC_5a8b8/fast] Error 2
+
+
+
+Determining if the include file xinput.h exists failed with the following output:
+Change Dir: C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-vfa16s
+
+Run Build Command(s):C:/MinGW/bin/mingw32-make.exe -f Makefile cmTC_9d347/fast && C:/MinGW/bin/mingw32-make.exe  -f CMakeFiles\cmTC_9d347.dir\build.make CMakeFiles/cmTC_9d347.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-vfa16s'
+Building C object CMakeFiles/cmTC_9d347.dir/CheckIncludeFile.c.obj
+C:\MinGW\bin\gcc.exe    -o CMakeFiles\cmTC_9d347.dir\CheckIncludeFile.c.obj -c C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-vfa16s\CheckIncludeFile.c
+C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\build\CMakeFiles\CMakeScratch\TryCompile-vfa16s\CheckIncludeFile.c:1:20: fatal error: xinput.h: No such file or directory
+ #include <xinput.h>
+                    ^
+compilation terminated.
+CMakeFiles\cmTC_9d347.dir\build.make:76: recipe for target 'CMakeFiles/cmTC_9d347.dir/CheckIncludeFile.c.obj' failed
+mingw32-make.exe[1]: *** [CMakeFiles/cmTC_9d347.dir/CheckIncludeFile.c.obj] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/HP/Documents/1ScolaireIMAC/OpenGL/testtemplateenguerrand/build/CMakeFiles/CMakeScratch/TryCompile-vfa16s'
+Makefile:126: recipe for target 'cmTC_9d347/fast' failed
+mingw32-make.exe: *** [cmTC_9d347/fast] Error 2
+
+
+
