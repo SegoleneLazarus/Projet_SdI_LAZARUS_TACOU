@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\OpenGLTemplate.dir/objects.a
-C:\MinGW\bin\ar.exe qc CMakeFiles\OpenGLTemplate.dir/objects.a @CMakeFiles\OpenGLTemplate.dir\objects1
-C:\MinGW\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\OpenGLTemplate.dir/objects.a -Wl,--no-whole-archive -o C:\Users\HP\Documents\1ScolaireIMAC\OpenGL\testtemplateenguerrand\OpenGLTemplate-IMAC2025_glu\bin\OpenGLTemplate.exe -Wl,--out-implib,libOpenGLTemplate.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\OpenGLTemplate.dir\linkLibs.rsp
