@@ -8,23 +8,10 @@
 #include "3D_tools.h"
 #include "draw_scene.h"
 /* Structure */
-struct objet{
+typedef struct Objet{
 	char nom;
 	float xpos;
 	float ypos;
-<<<<<<< HEAD
-	int r;
-	int v;
-	int b;
-	int sizex;
-	int sizey;
-	int sizez;
-	int transformx;
-	int transformy;
-	int transformz;
-
-
-=======
 	float zpos;
 	float r;
 	float v;
@@ -36,8 +23,26 @@ struct objet{
 	float rotatex;
 	float rotatey;
 	float rotatez;
->>>>>>> 131770a8bb03abcbcb2b3ed559e31a653c95da4f
-};
+
+	Objet() {} // là un constructeur vide
+
+    Objet(char nom, float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) { 
+		this->nom = nom;
+        this->xpos = xpos;
+        this->ypos = ypos;
+        this->zpos = zpos;
+		this->r = r;
+        this->v = v;
+        this->b = b;
+		this->sizex = sizex;
+        this->sizey = sizey;
+        this->sizez = sizez;
+		this->anglerotate = anglerotate;
+        this->rotatex = rotatex;
+        this->rotatey = rotatey;
+		this->rotatez = rotatez;
+    }
+}Objet;
 
 
 
@@ -136,7 +141,7 @@ void dessinerballe()
 	drawCircle();
 }
 
-void dessinersectionmur()
+void dessinersectionmur() // TODO refaire avec des GL_LIGNES 
 {
 	// rect Haut
 		glPushMatrix();
@@ -242,11 +247,8 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 }
 int xsectionmur;
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> 131770a8bb03abcbcb2b3ed559e31a653c95da4f
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
 {
 	/* GLFW initialisation */
@@ -280,19 +282,14 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 
-<<<<<<< HEAD
-=======
 	// créer les objets 
 
 	//créer mur 
-	objet mur;
-	// mur.nom="mur";
-	mur.sizex=10;
-	mur.sizez=1;
-	mur.rotatey=0;
-	mur.rotatez=0;
-	objet murtab[16];
+	Objet mur = Objet("euh", xpos, ypos, zpos, r, v, b, 10., sizey, 1., anglerotate, rotatex, 0, 0);
+	
+	Objet murtab[16];
 	int xpos=15;
+	
 	for (int i=0; i>16;i+=4)
 	{
 		mur.sizey=15;
@@ -305,14 +302,14 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.ypos=0;
 
 		//rect haut
-		mur.zpos=5;
+		mur.zpos=5.;
 		murtab[i]=mur;
 
 		// rect Bas
-		mur.zpos=-5;
+		mur.zpos=-5.;
 		murtab[i+1]=mur;
 
-		mur.sizey=10;
+		mur.sizey=10.;
 		mur.r=200.0;
 		mur.b=200.0/255;
 		mur.v=200.0/255;
@@ -327,9 +324,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.ypos=-15./2.;
 		murtab[i+3]=mur;
 
-		xpos-=10;
+		xpos-=10.;
 	}
->>>>>>> 131770a8bb03abcbcb2b3ed559e31a653c95da4f
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -352,54 +348,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		/* Scene rendering */
 		// rect Haut
-		glPushMatrix();
-			glTranslatef(20-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur%40<=30) glTranslatef(10-xsectionmur,0,0);
-			else glTranslatef(50-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur%40<=20) glTranslatef(-xsectionmur,0,0);
-			else glTranslatef(40-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur%40<=10) glTranslatef(-10-xsectionmur,0,0);
-			else glTranslatef(30-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-
-		//balle 
-		glPushMatrix();
-<<<<<<< HEAD
-			glScalef(40,15,1);
-			glTranslatef(0,0,-5);
-			drawSquare();
-		glPopMatrix();		
-
-		// rect Droit
-		glPushMatrix();
-			glColor3f(200.0/255,200.0/255,200.0/255);
-			glTranslatef(0,15./2.,0);
-			glRotatef(90.0,1.,0.,0.);
-			glScalef(40,10,1);
-			drawSquare();
-		glPopMatrix();
-
-		// rect Gauche
-		glPushMatrix();
-			glColor3f(200.0/255,200.0/255,200.0/255);
-			glTranslatef(0,-15./2.,0);
-			glRotatef(90.0,1.,0.,0.);
-			glScalef(40,10,1);
-			drawSquare();
-		glPopMatrix();
-
-	//////////////////////////////////////////////////////////////////////////////sectionmur 
-		xsectionmur=(xsectionmur+1)%40;
+		// METTRE DANS UN FOR ????????
 		glPushMatrix();
 			glTranslatef(20-xsectionmur,0,0);
 			dessinersectionmur();
@@ -426,12 +375,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			dessinerballe();
 		glPopMatrix();
 
-=======
-			glTranslatef(0,-5,-2);
-			dessinerballe();
-		glPopMatrix();
-
->>>>>>> 131770a8bb03abcbcb2b3ed559e31a653c95da4f
 		//dessin raquette
 		glPushMatrix();
 			glTranslatef(-20,-((10.0/WINDOW_WIDTH)*xpos-5)*aspectRatio,(-10.0/WINDOW_HEIGHT)*ypos+5);
