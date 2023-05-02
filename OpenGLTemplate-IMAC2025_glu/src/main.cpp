@@ -7,9 +7,29 @@
 #include <math.h>
 #include "3D_tools.h"
 #include "draw_scene.h"
+/* Structure */
+struct objet{
+	char nom;
+	float xpos;
+	float ypos;
+	float zpos;
+	float r;
+	float v;
+	float b;
+	float sizex;
+	float sizey;
+	float sizez;
+	float anglerotate;
+	float rotatex;
+	float rotatey;
+	float rotatez;
+};
+
+
+
 /* Window properties */
-static const unsigned int WINDOW_WIDTH = 1500;
-static const unsigned int WINDOW_HEIGHT = 1000;
+static const unsigned int WINDOW_WIDTH = 900;
+static const unsigned int WINDOW_HEIGHT = 600;
 static const char WINDOW_TITLE[] = "TD04 Ex01";
 static float aspectRatio = 1.0;
 
@@ -83,8 +103,134 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 		}
 	}
 }
+void light()
+{
+	glMatrixMode(GL_MODELVIEW);
+	GLfloat pos[] = {5,5,5,1};
+	glEnable(GL_LIGHTING);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHT0);
+	glLoadIdentity();
+   	glLightfv(GL_LIGHT0, GL_POSITION, pos);
+	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+}
+void dessinerballe()
+{
+	glColor3f(100/255,10/255,10/255);
+	glRotatef(90.,0,1,0);
+	//glScalef(2,2,2);
+	drawCircle();
+}
 
-int main(int argc, char** argv)
+void dessinersectionmur()
+{
+	// rect Haut
+		glPushMatrix();
+			glColor3f(100/255,10/255,10/255);
+			glTranslatef(0,0,4.9);
+			glScalef(1./2.,15,1);
+			drawSquare();
+		glPopMatrix();
+// tu me preferes flo ???? pas segolene !!!!
+// il est jaloux que je bosse le projet pendant mes vacances
+		// rect Bas
+		glPushMatrix();
+			glColor3f(100/255,10/255,10/255);
+			glTranslatef(0,0,-5+0.1);
+			glScalef(1./2.,15,1);
+			drawSquare();
+		glPopMatrix();		
+
+		// rect Droit
+		glPushMatrix();
+			glColor3f(100/255,10/255,10/255);
+			glTranslatef(0,15./2.-0.1,0);
+			glRotatef(90.0,1.,0.,0.);			
+
+			glScalef(1./2.,10,1);
+			
+			drawSquare();
+		glPopMatrix();	
+
+		// rect Gauche
+		glPushMatrix();
+			glColor3f(100/255,10/255,10/255);
+			glTranslatef(0,-15./2.+0.1,0);
+			glRotatef(90.0,1.,0.,0.);
+			glScalef(1./2.,10,1);
+			drawSquare();
+		glPopMatrix();
+}
+void dessinerraquette(){
+// rect Haut
+		glPushMatrix();
+			glColor3f(10/255,10/255,10/255);
+			glRotatef(90.0,0.,1.,0.);
+			glTranslatef(-4./3.,0,0);
+			glScalef(1./20.,4,2);
+			drawSquare();
+		glPopMatrix();
+// tu me preferes flo ???? pas segolene !!!!
+// il est jaloux que je bosse le projet pendant mes vacances
+		// rect Bas
+		glPushMatrix();
+			glColor3f(10/255,10/255,10/255);
+			glRotatef(90.0,0.,1.,0.);
+			glTranslatef(4./3.,0,0);
+			glScalef(1./20.,4,2);
+			drawSquare();
+		glPopMatrix();		
+
+		// rect Droit
+		glPushMatrix();
+			glColor3f(10/255,10/255,10/255);
+			glTranslatef(0,2,0);
+			glRotatef(90.0,1.,0.,0.);			
+			glRotatef(90.0,0.,1.,0.);
+
+			glScalef(1./20.,4.*2./3.,2);
+			
+			drawSquare();
+		glPopMatrix();	
+
+		// rect Gauche
+		glPushMatrix();
+			glColor3f(10/255,10/255,10/255);
+			glTranslatef(0,-2,0);
+			glRotatef(90.0,1.,0.,0.);
+			glRotatef(90.0,0.,1.,0.);
+			glScalef(1./20.,4.*2./3.,2);
+			drawSquare();
+		glPopMatrix();
+}
+
+//déplcament balle /////////////////////////////////////////////////////////////
+float vitx=0.1;
+float vity=0.;
+float posxballe=-20.;
+float posyballe=0.;
+void moveball(float vitx,float vity,float *posxballe,float *posyballe)
+{
+	*posxballe+=vitx;
+	*posyballe+=vity; 
+}
+double xpos, ypos;
+// define prend le rôle d'une constante mais il va tout remplacer avant la compilation par sa valeur
+#define NBTAB 1500
+float tabX[NBTAB];
+float tabY[NBTAB];
+int nbPoint = 0;
+int entered;
+
+static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	glfwGetCursorPos(window, &xpos, &ypos);
+}
+int xsectionmur;
+
+
+
+int main(int argc, char** argv)/////////////////////////////////////////////////////////////
 {
 	/* GLFW initialisation */
 	GLFWwindow* window;
@@ -115,6 +261,55 @@ int main(int argc, char** argv)
 
 	float teta = 0;
 
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+
+	// créer les objets 
+
+	//créer mur 
+	objet mur;
+	// mur.nom="mur";
+	mur.sizex=10;
+	mur.sizez=1;
+	mur.rotatey=0;
+	mur.rotatez=0;
+	objet murtab[16];
+	int xpos=15;
+	for (int i=0; i>16;i+=4)
+	{
+		mur.sizey=15;
+		mur.r=100.0/255.;
+		mur.b=100.0/255.;
+		mur.v=255.0/255.;
+		mur.anglerotate=0;
+		mur.rotatex=0;
+		mur.xpos=xpos;
+		mur.ypos=0;
+
+		//rect haut
+		mur.zpos=5;
+		murtab[i]=mur;
+
+		// rect Bas
+		mur.zpos=-5;
+		murtab[i+1]=mur;
+
+		mur.sizey=10;
+		mur.r=200.0;
+		mur.b=200.0/255;
+		mur.v=200.0/255;
+		mur.zpos=0;
+		mur.anglerotate=90.0;
+		mur.rotatex=1.;
+		// rect Droit
+		mur.ypos=15./2.;
+		murtab[i+2]=mur;
+
+		// rect Gauche
+		mur.ypos=-15./2.;
+		murtab[i+3]=mur;
+
+		xpos-=10;
+	}
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -132,42 +327,93 @@ int main(int argc, char** argv)
 		setCamera();
 
 		/* Initial scenery setup */
-		
+		// light();
+
 
 		/* Scene rendering */
+		///////////////////////////////mur 
+		for (int i=0;i<16;i++)
+		{
+			mur=murtab[i];
+			glPushMatrix();
+				glColor3f(mur.r,mur.v,mur.b);
+				glScalef(mur.sizex,mur.sizey,mur.sizez);
+				glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+				glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
+				drawSquare();
+			glPopMatrix();	
+		}
 
-		// rect Haut
+
+		// // rect Haut
+		// glPushMatrix();
+		// 	glColor3f(100.0/255,100.0/255,100.0/255);
+		// 	glScalef(40,15,1);
+		// 	glTranslatef(0,0,5);
+		// 	drawSquare();
+		// glPopMatrix();
+
+		// // rect Bas
+		// glPushMatrix();
+		// 	glScalef(40,15,1);
+		// 	glTranslatef(0,0,-5);
+		// 	drawSquare();
+		// glPopMatrix();		
+
+		// // rect Droit
+		// glPushMatrix();
+		// 	glColor3f(200.0/255,200.0/255,200.0/255);
+		// 	glTranslatef(0,15./2.,0);
+		// 	glRotatef(90.0,1.,0.,0.);
+		// 	glScalef(40,10,1);
+		// 	drawSquare();
+		// glPopMatrix();
+
+		// // rect Gauche
+		// glPushMatrix();
+		// 	glColor3f(200.0/255,200.0/255,200.0/255);
+		// 	glTranslatef(0,-15./2.,0);
+		// 	glRotatef(90.0,1.,0.,0.);
+		// 	glScalef(40,10,1);
+		// 	drawSquare();
+		// glPopMatrix();
+
+	//////////////////////////////////////////////////////////////////////////////sectionmur 
+		xsectionmur=(xsectionmur+1)%40;
 		glPushMatrix();
-			glColor3f(100.0/255,100.0/255,100.0/255);
-			glScalef(40,15,1);
-			glTranslatef(0,0,5);
-			drawSquare();
+			glTranslatef(20-xsectionmur,0,0);
+			dessinersectionmur();
+		glPopMatrix();
+		glPushMatrix();
+			if (xsectionmur%40<=30) glTranslatef(10-xsectionmur,0,0);
+			else glTranslatef(50-xsectionmur,0,0);
+			dessinersectionmur();
+		glPopMatrix();
+		glPushMatrix();
+			if (xsectionmur%40<=20) glTranslatef(-xsectionmur,0,0);
+			else glTranslatef(40-xsectionmur,0,0);
+			dessinersectionmur();
+		glPopMatrix();
+		glPushMatrix();
+			if (xsectionmur%40<=10) glTranslatef(-10-xsectionmur,0,0);
+			else glTranslatef(30-xsectionmur,0,0);
+			dessinersectionmur();
 		glPopMatrix();
 
-		// rect Bas
+		//balle 
 		glPushMatrix();
-			glScalef(40,15,1);
-			glTranslatef(0,0,-5);
-			drawSquare();
-		glPopMatrix();		
-
-		// rect Droit
-		glPushMatrix();
-			glColor3f(200.0/255,200.0/255,200.0/255);
-			glTranslatef(0,15./2.,0);
-			glRotatef(90.0,1.,0.,0.);
-			glScalef(40,10,1);
-			drawSquare();
-		glPopMatrix();	
-
-		// rect Gauche
-		glPushMatrix();
-			glColor3f(200.0/255,200.0/255,200.0/255);
-			glTranslatef(0,-15./2.,0);
-			glRotatef(90.0,1.,0.,0.);
-			glScalef(40,10,1);
-			drawSquare();
+			glTranslatef(0,-5,-2);
+			dessinerballe();
 		glPopMatrix();
+
+		//dessin raquette
+		glPushMatrix();
+			glTranslatef(-20,-((10.0/WINDOW_WIDTH)*xpos-5)*aspectRatio,(-10.0/WINDOW_HEIGHT)*ypos+5);
+			// glTranslatef(0, xpos,ypos);
+			dessinerraquette();
+		glPopMatrix();
+
+
 
 		
 		
