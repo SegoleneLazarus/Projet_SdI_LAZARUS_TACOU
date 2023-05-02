@@ -1,0 +1,5 @@
+bin/
+build/
+CMakeFiles/
+.vscode/*
+!.vscode/settings.json
