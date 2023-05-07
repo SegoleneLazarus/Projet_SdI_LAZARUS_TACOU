@@ -9,7 +9,7 @@
 #include "draw_scene.h"
 /* Structure */
 typedef struct Objet{
-	char nom;
+	// char nom;
 	float xpos;
 	float ypos;
 	float zpos;
@@ -26,8 +26,8 @@ typedef struct Objet{
 
 	Objet() {} // là un constructeur vide
 
-    Objet(char nom, float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) { 
-		this->nom = nom;
+    Objet( float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) { 
+		// this->nom = nom;
         this->xpos = xpos;
         this->ypos = ypos;
         this->zpos = zpos;
@@ -285,43 +285,49 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	// créer les objets 
 
 	//créer mur 
-	Objet mur = Objet("euh", xpos, ypos, zpos, r, v, b, 10., sizey, 1., anglerotate, rotatex, 0, 0);
+	
 	
 	Objet murtab[16];
-	int xpos=15;
+	// int xpos=15;
 	
 	for (int i=0; i>16;i+=4)
 	{
-		mur.sizey=15;
-		mur.r=100.0/255.;
-		mur.b=100.0/255.;
-		mur.v=255.0/255.;
-		mur.anglerotate=0;
-		mur.rotatex=0;
-		mur.xpos=xpos;
-		mur.ypos=0;
+		int xpos=15.;
+		Objet mur = Objet(xpos, 0., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15, 1., 0., 0., 0., 0.);
+		// mur.sizey=15;
+		// mur.r=100.0/255.;
+		// mur.b=100.0/255.;
+		// mur.v=255.0/255.;
+		// mur.anglerotate=0;
+		// mur.rotatex=0;
+		// mur.xpos=xpos;
+		// mur.ypos=0;
 
 		//rect haut
-		mur.zpos=5.;
+		// mur.zpos=5.;
+		Objet(xpos, 5., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15., 1., 0., 0., 0., 0.);
 		murtab[i]=mur;
 
 		// rect Bas
-		mur.zpos=-5.;
+		// mur.zpos=-5.;
+		Objet(xpos, -5., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15., 1., 0., 0., 0., 0.);
 		murtab[i+1]=mur;
 
-		mur.sizey=10.;
-		mur.r=200.0;
-		mur.b=200.0/255;
-		mur.v=200.0/255;
-		mur.zpos=0;
-		mur.anglerotate=90.0;
-		mur.rotatex=1.;
+		// mur.sizey=10.;
+		// mur.r=200.0;
+		// mur.b=200.0/255;
+		// mur.v=200.0/255;
+		// mur.zpos=0;
+		// mur.anglerotate=90.0;
+		// mur.rotatex=1.;
 		// rect Droit
-		mur.ypos=15./2.;
+		//mur.ypos=15./2.;
+		Objet(xpos, 15./2., 0., 200.0/255.,200.0/255., 200.0/255., 10., 10., 1., 90., 1., 0., 0.);
 		murtab[i+2]=mur;
 
 		// rect Gauche
-		mur.ypos=-15./2.;
+		// mur.ypos=-15./2.;
+		Objet(xpos, -15./2., 0., 200.0/255.,200.0/255., 200.0/255., 10., 10., 1., 90., 1., 0., 0.);
 		murtab[i+3]=mur;
 
 		xpos-=10.;
