@@ -263,14 +263,14 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	//créer mur 
 	Objet mur;
 	// mur.nom="mur";
-	mur.sizex=10;
-	mur.sizez=1;
+	mur.sizex=10.;
+	mur.sizez=1.;
 	mur.rotatey=0;
 	mur.rotatez=0;
 	float xpos=15.;
-	for (int i=0; i>16;i+=4)
+	for (int i=0; i<16;i+=4)
 	{
-		mur.sizey=15;
+		mur.sizey=15.;
 		mur.r=100.0/255.;
 		mur.b=100.0/255.;
 		mur.v=255.0/255.;
@@ -280,15 +280,15 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.ypos=0;
 
 		//rect haut
-		mur.zpos=5;
+		mur.zpos=5.;
 		objettab[i]=mur;
 		objettab[i]=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);
 		Objet testpls=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);	
 		// rect Bas
-		mur.zpos=-5;
+		mur.zpos=-5.;
 		objettab[i+1]=mur;
 
-		mur.sizey=10;
+		mur.sizey=10.;
 		mur.r=200.0;
 		mur.b=200.0/255;
 		mur.v=200.0/255;
@@ -303,7 +303,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.ypos=-15./2.;
 		objettab[i+3]=mur;
 
-		xpos-=10;
+		xpos-=10.;
 	}
 
 	//créer obstacles 
@@ -403,6 +403,19 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		// 	glScalef(40,10,1);
 		// 	drawSquare();
 		// glPopMatrix();
+
+
+	for (int i=0;i<16;i++)
+        {
+
+            mur=objettab[i];
+            glPushMatrix();
+                glScalef(mur.sizex,mur.sizey,mur.sizez);
+                glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+                glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
+                drawMur(mur);
+            glPopMatrix();
+        }
 
 	//sectionmur et leur déplacement
 		xsectionmur=(xsectionmur+1)%40;

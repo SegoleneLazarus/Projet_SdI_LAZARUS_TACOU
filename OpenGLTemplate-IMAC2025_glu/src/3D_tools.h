@@ -74,5 +74,7 @@ void drawCone();
 
 void drawSphere();
 
+void drawMur(Objet mur);
+
 /* Small tools */
 float toRad(float deg);
