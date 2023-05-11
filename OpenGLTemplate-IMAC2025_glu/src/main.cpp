@@ -289,6 +289,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.zpos=-5.;
 		objettab[i+1]=mur;
 
+
+		// rect Droit
 		mur.sizey=10.;
 		mur.r=200.0;
 		mur.b=200.0/255;
@@ -297,7 +299,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.anglerotate=90.0;
 		mur.rotatex=1.;
 
-		// rect Droit
 		mur.ypos=15./2.;
 		objettab[i+2]=mur;
 
@@ -414,8 +415,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
             glPushMatrix();
                 
                 glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+				glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
 				glScalef(mur.sizex,mur.sizey,mur.sizez);
-                glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
+                
                 drawMur(mur);
             glPopMatrix();
         }
