@@ -283,7 +283,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.zpos=5.;
 		objettab[i]=mur;
 		objettab[i]=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);
-		Objet testpls=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);	
+		// Objet testpls=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,40.0f,15.f,1.f,0.f,0.f,0.f,0.f);	
+
 		// rect Bas
 		mur.zpos=-5.;
 		objettab[i+1]=mur;
@@ -295,6 +296,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		mur.zpos=0;
 		mur.anglerotate=90.0;
 		mur.rotatex=1.;
+
 		// rect Droit
 		mur.ypos=15./2.;
 		objettab[i+2]=mur;
@@ -410,8 +412,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
             mur=objettab[i];
             glPushMatrix();
-                glScalef(mur.sizex,mur.sizey,mur.sizez);
+                
                 glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+				glScalef(mur.sizex,mur.sizey,mur.sizez);
                 glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
                 drawMur(mur);
             glPopMatrix();
