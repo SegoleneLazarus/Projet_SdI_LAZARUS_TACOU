@@ -92,19 +92,19 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 
 void light(Objet objettab[])
 {
-	float modificateurlumineux=3;
+	float modificateurlumineux=6;
 	for(int i=0;i<16+nombreobstacles;i++)//les 16 premiers objets sont les murs; 
 	{
-		objettab[i].r-=(objettab[i].xpos)*modificateurlumineux;
-		if(objettab[i].r>255)objettab[i].r=255;
+		objettab[i].r-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		if(objettab[i].r>1)objettab[i].r=1;
 		if(objettab[i].r<0) objettab[i].r=0;
 
-		objettab[i].v-=(objettab[i].xpos)*modificateurlumineux;
-		if(objettab[i].v>255)objettab[i].v=255;
+		objettab[i].v-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		if(objettab[i].v>1)objettab[i].v=1;
 		if(objettab[i].v<0) objettab[i].v=0;
 
-		objettab[i].b-=(objettab[i].xpos)*modificateurlumineux;
-		if(objettab[i].b>255)objettab[i].b=255;
+		objettab[i].b-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		if(objettab[i].b>1)objettab[i].b=1;
 		if(objettab[i].b<0) objettab[i].b=0;
 	}
 	
@@ -268,6 +268,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	mur.rotatey=0;
 	mur.rotatez=0;
 	float xpos=15.;
+
+	// TODO en rajouter
 	for (int i=0; i<16;i+=4)
 	{
 		mur.sizey=15.;
@@ -349,6 +351,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	obstacle.sizey=15./2;
 	objettab[16+5]=obstacle;
 
+
+	light(objettab);
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -367,7 +372,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		
 		/* Initial scenery setup */
-		// light();
+		
 
 
 		/* Scene rendering */
@@ -481,7 +486,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		//teta+=0.1;
 		double tempspasse = glfwGetTime() - startTime;
 		
-		while
+		// while
 	}
 
 	glfwTerminate();
