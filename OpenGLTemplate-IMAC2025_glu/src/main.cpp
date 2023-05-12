@@ -477,6 +477,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		/* Animate scenery */
 		teta+=0.03;
 		//teta+=0.1;
+		double tempspasse = glfwGetTime() - startTime;
+		
+		while
 	}
 
 	glfwTerminate();
