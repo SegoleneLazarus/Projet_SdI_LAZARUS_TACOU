@@ -480,8 +480,11 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		teta+=0.03;
 		//teta+=0.1;
 		double tempspasse = glfwGetTime() - startTime;
-		
-		while
+
+		while(tempspasse < FRAMERATE_IN_SECONDS){
+			glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS-elapsedTime);
+			tempspasse = glfwGetTime() - startTime;
+		}
 	}
 
 	glfwTerminate();
