@@ -21,6 +21,41 @@
 
 #define NB_SEG_CIRCLE 64
 
+typedef struct Objet{
+	// char nom;
+	float xpos;
+	float ypos;
+	float zpos;
+	float r;
+	float v;
+	float b;
+	float sizex;
+	float sizey;
+	float sizez;
+	float anglerotate;
+	float rotatex;
+	float rotatey;
+	float rotatez;
+
+	Objet() {} // là un constructeur vide
+
+    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) {
+        this->xpos = xpos;
+        this->ypos = ypos;
+        this->zpos = zpos;
+		this->r = r;
+        this->v = v;
+        this->b = b;
+		this->sizex = sizex;
+        this->sizey = sizey;
+        this->sizez = sizez;
+		this->anglerotate = anglerotate;
+        this->rotatex = rotatex;
+        this->rotatey = rotatey;
+		this->rotatez = rotatez;
+    }
+}Objet;
+
 /* Camera parameters and functions */
 static const float Z_NEAR = 0.1f;
 static const float Z_FAR = 100.f;

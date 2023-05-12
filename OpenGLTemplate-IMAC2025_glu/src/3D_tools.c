@@ -17,9 +17,9 @@ float toRad(float deg) {
 }
 //gl color , vertex3fglnormal dans le glbegin,gltextcoord
 
-void drawMur(objet mur){
+void drawMur(Objet mur){
 	glBegin(GL_TRIANGLE_FAN);
-		glColor(mur.r,mur.v,mur.b)
+		glColor(mur.r,mur.v,mur.b);
 		glVertex3f(-0.5,-0.5,0.0);
 		glVertex3f(0.5,-0.5,0.0);
 		glVertex3f(0.5,0.5,0.0);
