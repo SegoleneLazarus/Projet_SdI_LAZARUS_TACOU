@@ -6,7 +6,7 @@ float phy = 60.0f; // Angle between z axis and viewpoint
 float dist_zoom = 30.0f; // Distance between origin and viewpoint
 
 void setCamera() {
-	gluLookAt(-25.,0.,0.,
+	gluLookAt(-28.,0.,0.,
 			  0.0,0.0,0.0,
 			  0.0,0.0,1.0);
 }
@@ -15,7 +15,17 @@ void setCamera() {
 float toRad(float deg) {
 	return deg*M_PI/180.0f;
 }
+//gl color , vertex3fglnormal dans le glbegin,gltextcoord
 
+void drawMur(objet mur){
+	glBegin(GL_TRIANGLE_FAN);
+		glColor(mur.r,mur.v,mur.b)
+		glVertex3f(-0.5,-0.5,0.0);
+		glVertex3f(0.5,-0.5,0.0);
+		glVertex3f(0.5,0.5,0.0);
+		glVertex3f(-0.5,0.5,0.0);
+	glEnd();
+}
 
 void drawSquare() {
 	glBegin(GL_TRIANGLE_FAN);

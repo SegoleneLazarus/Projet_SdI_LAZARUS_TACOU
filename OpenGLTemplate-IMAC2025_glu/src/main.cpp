@@ -26,8 +26,7 @@ typedef struct Objet{
 
 	Objet() {} // là un constructeur vide
 
-    Objet( float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) { 
-		// this->nom = nom;
+    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) {
         this->xpos = xpos;
         this->ypos = ypos;
         this->zpos = zpos;
@@ -44,7 +43,8 @@ typedef struct Objet{
     }
 }Objet;
 
-
+int nombreobstacles;
+Objet objettab[100];
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 900;
@@ -122,16 +122,25 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 		}
 	}
 }
-void light()
+
+void light(Objet objettab[])
 {
-	glMatrixMode(GL_MODELVIEW);
-	GLfloat pos[] = {5,5,5,1};
-	glEnable(GL_LIGHTING);
-	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHT0);
-	glLoadIdentity();
-   	glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	glColorMaterial(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE);
+	float modificateurlumineux=3;
+	for(int i=0;i<16+nombreobstacles;i++)//les 16 premiers objets sont les murs; 
+	{
+		objettab[i].r-=(objettab[i].xpos)*modificateurlumineux;
+		if(objettab[i].r>255)objettab[i].r=255;
+		if(objettab[i].r<0) objettab[i].r=0;
+
+		objettab[i].v-=(objettab[i].xpos)*modificateurlumineux;
+		if(objettab[i].v>255)objettab[i].v=255;
+		if(objettab[i].v<0) objettab[i].v=0;
+
+		objettab[i].b-=(objettab[i].xpos)*modificateurlumineux;
+		if(objettab[i].b>255)objettab[i].b=255;
+		if(objettab[i].b<0) objettab[i].b=0;
+	}
+	
 }
 void dessinerballe()
 {
@@ -141,7 +150,7 @@ void dessinerballe()
 	drawCircle();
 }
 
-void dessinersectionmur() // TODO refaire avec des GL_LIGNES 
+void dessinersectionmur(Objet objettab[])
 {
 	// rect Haut
 		glPushMatrix();
@@ -285,53 +294,91 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	// créer les objets 
 
 	//créer mur 
-	
-	
-	Objet murtab[16];
-	// int xpos=15;
-	
+	Objet mur;
+	// mur.nom="mur";
+	mur.sizex=10;
+	mur.sizez=1;
+	mur.rotatey=0;
+	mur.rotatez=0;
+	float xpos=15.;
 	for (int i=0; i>16;i+=4)
 	{
-		int xpos=15.;
-		Objet mur = Objet(xpos, 0., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15, 1., 0., 0., 0., 0.);
-		// mur.sizey=15;
-		// mur.r=100.0/255.;
-		// mur.b=100.0/255.;
-		// mur.v=255.0/255.;
-		// mur.anglerotate=0;
-		// mur.rotatex=0;
-		// mur.xpos=xpos;
-		// mur.ypos=0;
+		mur.sizey=15;
+		mur.r=100.0/255.;
+		mur.b=100.0/255.;
+		mur.v=255.0/255.;
+		mur.anglerotate=0;
+		mur.rotatex=0;
+		mur.xpos=xpos;
+		mur.ypos=0;
 
 		//rect haut
-		// mur.zpos=5.;
-		Objet(xpos, 5., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15., 1., 0., 0., 0., 0.);
-		murtab[i]=mur;
-
+		mur.zpos=5;
+		objettab[i]=mur;
+		objettab[i]=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);
+		Objet testpls=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);	
 		// rect Bas
-		// mur.zpos=-5.;
-		Objet(xpos, -5., 0., 100.0/255.,100.0/255., 255.0/255., 10., 15., 1., 0., 0., 0., 0.);
-		murtab[i+1]=mur;
+		mur.zpos=-5;
+		objettab[i+1]=mur;
 
-		// mur.sizey=10.;
-		// mur.r=200.0;
-		// mur.b=200.0/255;
-		// mur.v=200.0/255;
-		// mur.zpos=0;
-		// mur.anglerotate=90.0;
-		// mur.rotatex=1.;
+		mur.sizey=10;
+		mur.r=200.0;
+		mur.b=200.0/255;
+		mur.v=200.0/255;
+		mur.zpos=0;
+		mur.anglerotate=90.0;
+		mur.rotatex=1.;
 		// rect Droit
-		//mur.ypos=15./2.;
-		Objet(xpos, 15./2., 0., 200.0/255.,200.0/255., 200.0/255., 10., 10., 1., 90., 1., 0., 0.);
-		murtab[i+2]=mur;
+		mur.ypos=15./2.;
+		objettab[i+2]=mur;
 
 		// rect Gauche
-		// mur.ypos=-15./2.;
-		Objet(xpos, -15./2., 0., 200.0/255.,200.0/255., 200.0/255., 10., 10., 1., 90., 1., 0., 0.);
-		murtab[i+3]=mur;
+		mur.ypos=-15./2.;
+		objettab[i+3]=mur;
 
-		xpos-=10.;
+		xpos-=10;
 	}
+
+	//créer obstacles 
+
+	Objet obstacle;
+	//moitié gauche
+	obstacle.r=150.;
+	obstacle.v=150.;
+	obstacle.b=150.;
+	obstacle.sizex=10;
+	obstacle.sizey=15./2;
+	obstacle.sizez=1;
+	obstacle.xpos=20;
+	obstacle.ypos=-15./4;
+	obstacle.zpos=0;
+	obstacle.anglerotate=90.0;
+	obstacle.rotatex=0;
+	obstacle.rotatey=1.0;
+	obstacle.rotatez=0;
+	objettab[16+1]=obstacle;
+
+	//moitié droite
+	obstacle.ypos=-15./4;
+	objettab[16+2]=obstacle;
+
+	//moitié basse
+	obstacle.ypos=0;
+	obstacle.zpos=-5./2;
+	obstacle.sizex=5;
+	obstacle.sizey=15;
+	objettab[16+3]=obstacle;
+
+	//moitié haute 
+	obstacle.zpos=5./2;
+	objettab[16+4]=obstacle;
+	
+	//moitié gauche décalée au centre
+	obstacle.zpos=0;
+	obstacle.sizex=10;
+	obstacle.sizey=15./2;
+	objettab[16+5]=obstacle;
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -348,31 +395,68 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		glLoadIdentity();
 		setCamera();
 
+		
 		/* Initial scenery setup */
 		// light();
 
 
 		/* Scene rendering */
-		// rect Haut
-		// METTRE DANS UN FOR ????????
+		///////////////////////////////mur 
+		
+		
+		// // rect Haut
+		// glPushMatrix();
+		// 	glColor3f(100.0/255,100.0/255,100.0/255);
+		// 	glScalef(40,15,1);
+		// 	glTranslatef(0,0,5);
+		// 	drawSquare();
+		// glPopMatrix();
+
+		// // rect Bas
+		// glPushMatrix();
+		// 	glScalef(40,15,1);
+		// 	glTranslatef(0,0,-5);
+		// 	drawSquare();
+		// glPopMatrix();		
+
+		// // rect Droit
+		// glPushMatrix();
+		// 	glColor3f(200.0/255,200.0/255,200.0/255);
+		// 	glTranslatef(0,15./2.,0);
+		// 	glRotatef(90.0,1.,0.,0.);
+		// 	glScalef(40,10,1);
+		// 	drawSquare();
+		// glPopMatrix();
+
+		// // rect Gauche
+		// glPushMatrix();
+		// 	glColor3f(200.0/255,200.0/255,200.0/255);
+		// 	glTranslatef(0,-15./2.,0);
+		// 	glRotatef(90.0,1.,0.,0.);
+		// 	glScalef(40,10,1);
+		// 	drawSquare();
+		// glPopMatrix();
+
+	//sectionmur et leur déplacement
+		xsectionmur=(xsectionmur+1)%40;
 		glPushMatrix();
 			glTranslatef(20-xsectionmur,0,0);
-			dessinersectionmur();
+			dessinersectionmur(objettab);
 		glPopMatrix();
 		glPushMatrix();
 			if (xsectionmur%40<=30) glTranslatef(10-xsectionmur,0,0);
 			else glTranslatef(50-xsectionmur,0,0);
-			dessinersectionmur();
+			dessinersectionmur(objettab);
 		glPopMatrix();
 		glPushMatrix();
 			if (xsectionmur%40<=20) glTranslatef(-xsectionmur,0,0);
 			else glTranslatef(40-xsectionmur,0,0);
-			dessinersectionmur();
+			dessinersectionmur(objettab);
 		glPopMatrix();
 		glPushMatrix();
 			if (xsectionmur%40<=10) glTranslatef(-10-xsectionmur,0,0);
 			else glTranslatef(30-xsectionmur,0,0);
-			dessinersectionmur();
+			dessinersectionmur(objettab);
 		glPopMatrix();
 
 		//balle 
