@@ -43,6 +43,17 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
+float position_souris_x = WINDOW_WIDTH / 2.0;
+float position_souris_y = WINDOW_HEIGHT / 2.0;
+
+
+void miseAJourPositionSouris(GLFWwindow* window, double xpos, double ypos)
+{
+    position_souris_x = xpos;
+    position_souris_y = WINDOW_HEIGHT - ypos;
+}
+
+
 void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	if (action == GLFW_PRESS) {
@@ -156,7 +167,7 @@ void dessinersectionmur(Objet objettab[])
 			drawSquare();
 		glPopMatrix();
 }
-void dessinerraquette(){
+void dessinerRaquette(){
 // rect Haut
 		glPushMatrix();
 			glColor3f(10/255,10/255,10/255);
@@ -234,6 +245,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	/* Callback to a function if an error is rised by GLFW */
 	glfwSetErrorCallback(onError);
 
+	
+
 	/* Create a windowed mode window and its OpenGL context */
 	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, NULL, NULL);
 	if (!window)
@@ -246,6 +259,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
+	glfwSetCursorPosCallback(window, miseAJourPositionSouris);
 	glfwSetWindowSizeCallback(window,onWindowResized);
 	glfwSetKeyCallback(window, onKey);
 
@@ -259,6 +273,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 
 	// créer les objets 
+	
 
 	//créer mur 
 	Objet mur;
@@ -376,6 +391,19 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 
 		/* Scene rendering */
+		
+		// Dessiner le rectangle à la position de la souris
+        glPushMatrix();
+			glTranslatef(-20, position_souris_x, position_souris_y);
+			glColor3f(1.0,0.0, 0.0); // Couleur rouge
+			drawSquare();
+			// glBegin(GL_QUADS);
+			// 	glVertex2f(-1.0, -1.0);
+			// 	glVertex2f(-1.0, 1.0);
+			// 	glVertex2f(1.0, 1.0);
+			// 	glVertex2f(1.0, -1.0);
+			// glEnd();
+        glPopMatrix();
 		///////////////////////////////mur 
 		
 		
@@ -459,7 +487,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		glPushMatrix();
 			glTranslatef(-20,-((10.0/WINDOW_WIDTH)*xpos-5)*aspectRatio,(-10.0/WINDOW_HEIGHT)*ypos+5);
 			// glTranslatef(0, xpos,ypos);
-			dessinerraquette();
+			dessinerRaquette();
 		glPopMatrix();
 
 
