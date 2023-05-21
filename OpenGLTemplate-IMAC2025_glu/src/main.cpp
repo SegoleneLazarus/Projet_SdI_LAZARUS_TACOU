@@ -12,6 +12,7 @@
 
 int nombreobstacles;
 Objet objettab[100];
+int nombredemur=32;
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 900;
@@ -152,31 +153,57 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-void light(Objet objettab[])
+void light(Objet objettab[],int nombredemur)
 {
 	float modificateurlumineux=6;
-	for(int i=0;i<16+nombreobstacles;i++)//les 16 premiers objets sont les murs; 
+	for(int i=0;i<nombredemur;i++)//les 16 premiers objets sont les murs; 
 	{
-		objettab[i].r-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		objettab[i].r-=((objettab[i].xpos+25)*modificateurlumineux)/255;
 		if(objettab[i].r>1)objettab[i].r=1;
 		if(objettab[i].r<0) objettab[i].r=0;
 
-		objettab[i].v-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		objettab[i].v-=((objettab[i].xpos+25)*modificateurlumineux)/255;
 		if(objettab[i].v>1)objettab[i].v=1;
 		if(objettab[i].v<0) objettab[i].v=0;
 
-		objettab[i].b-=((objettab[i].xpos+20)*modificateurlumineux)/255;
+		objettab[i].b-=((objettab[i].xpos+25)*modificateurlumineux)/255;
 		if(objettab[i].b>1)objettab[i].b=1;
 		if(objettab[i].b<0) objettab[i].b=0;
 	}
 	
 }
-void dessinerballe()
+Balle balle=Balle(0,0,0,0.1,0.1,0.1);
+void deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
+{
+	for(int i=0;i<4;i++)//mur haut bas droite et gauche
+	{
+		if (balle.ypos>objettab[i].ypos or balle.ypos<objettab[i].ypos)
+		{
+			balle.vity=-balle.vity;
+		}
+		if (balle.zpos>objettab[i].zpos or balle.zpos<objettab[i].zpos)
+		{
+			balle.vitz=-balle.vitz;
+		}
+	}
+	if (balle.xpos>=19.5)// diamètre de la balle est de 1 ? 
+	{
+		if(balle.zpos<(-rectPositionZ)+2 && balle.zpos>(-rectPositionZ)-2 && balle.ypos<(-rectPositionY)+2 && balle.ypos>(-rectPositionY)-2)// test si la balle touche la raquette 
+		{
+			balle.vitx=-balle.vitx;
+		}
+		else balle.vitx=0;
+	}
+}
+
+void dessinerballe(Balle balle)
 {
 	glColor3f(100/255,10/255,10/255);
 	glRotatef(90.,0,1,0);
 	//glScalef(2,2,2);
+	glTranslatef(balle.xpos,balle.ypos,balle.zpos);
 	drawCircle();
+
 }
 
 void dessinersectionmur(Objet objettab[])
@@ -346,8 +373,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	mur.rotatez=0;
 	float xpos=15.;
 
-	// TODO en rajouter
-	for (int i=0; i<16;i+=4)
+	// TODO en rajouter (que ca marche)
+	for (int i=0; i<nombredemur;i+=4)
 	{
 		mur.sizey=15.;
 		mur.r=100.0/255.;
@@ -429,7 +456,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	objettab[16+5]=obstacle;
 
 
-	light(objettab);
+	light(objettab,nombredemur);
 	
 
 	/* Loop until the user closes the window */
@@ -493,7 +520,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		// glPopMatrix();
 
 
-	for (int i=0;i<16;i++)
+	for (int i=0;i<nombredemur;i++)
         {
 
             mur=objettab[i];
@@ -531,8 +558,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		//balle 
 		glPushMatrix();
-			glTranslatef(0,-5,-2);
-			dessinerballe();
+			balle.ypos=-5;
+			balle.zpos=-2;
+			dessinerballe(balle);
 		glPopMatrix();
 
 		//dessin raquette
