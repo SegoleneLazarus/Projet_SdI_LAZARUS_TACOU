@@ -172,16 +172,16 @@ void light(Objet objettab[],int nombredemur)
 	}
 	
 }
-Balle balle=Balle(0,0,0,0.1,0.1,0.1);
-void deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
+Balle balle=Balle(0,-5,-2,0.1,0.1,0.1);
+Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 {
 	for(int i=0;i<4;i++)//mur haut bas droite et gauche
 	{
-		if (balle.ypos>objettab[i].ypos or balle.ypos<objettab[i].ypos)
+		if (balle.ypos>objettab[i].ypos || balle.ypos<objettab[i].ypos)
 		{
 			balle.vity=-balle.vity;
 		}
-		if (balle.zpos>objettab[i].zpos or balle.zpos<objettab[i].zpos)
+		if (balle.zpos>objettab[i].zpos || balle.zpos<objettab[i].zpos)
 		{
 			balle.vitz=-balle.vitz;
 		}
@@ -194,6 +194,10 @@ void deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 		}
 		else balle.vitx=0;
 	}
+	balle.xpos+=balle.vitx;
+	balle.ypos+=balle.vity;
+	balle.zpos+=balle.vitz;
+	return balle;
 }
 
 void dessinerballe(Balle balle)
@@ -558,8 +562,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		//balle 
 		glPushMatrix();
-			balle.ypos=-5;
-			balle.zpos=-2;
 			dessinerballe(balle);
 		glPopMatrix();
 
@@ -570,7 +572,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			dessinerRaquette();
 		glPopMatrix();
 
-
+		balle=deplacementballe(balle,rectPositionY,rectPositionZ);
 
 		
 		
