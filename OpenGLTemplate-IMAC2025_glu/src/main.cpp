@@ -43,14 +43,65 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-float position_souris_x = WINDOW_WIDTH / 2.0;
-float position_souris_y = WINDOW_HEIGHT / 2.0;
+float rectOpacity = 0.f;
+// Texture du rectangle
+unsigned int textureRaqu;
+// Charge une texture depuis un fichier
+// unsigned int loadTexture(const char* filename)
+// {
+//     unsigned int textureID;
+//     glGenTextures(1, &textureID);
+
+//     int width, height, nrChannels;
+//     unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
+//     if (data)
+//     {
+//         GLenum format;
+//         if (nrChannels == 1)
+//             format = GL_RED;
+//         else if (nrChannels == 3)
+//             format = GL_RGB;
+//         else if (nrChannels == 4)
+//             format = GL_RGBA;
+
+//         glBindTexture(GL_TEXTURE_2D, textureID);
+//         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+//         glGenerateMipmap(GL_TEXTURE_2D);
+
+//         stbi_image_free(data);
+//     }
+//     else
+//     {
+//         // std::cerr << "Erreur lors du chargement de la texture" << std::endl;
+//         stbi_image_free(data);
+//         return 0;
+//     }
+
+//     return textureID;
+// }
+
+double lastMouseX = 0.0;
+double lastMouseY = 0.0;
+// Position du rectangle
+float rectPositionZ = 0.0f;
+float rectPositionY = 0.0f;
 
 
-void miseAJourPositionSouris(GLFWwindow* window, double xpos, double ypos)
+// Sensibilité du mouvement de la souris
+const float SENSITIVITY = 0.01f;
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-    position_souris_x = xpos;
-    position_souris_y = WINDOW_HEIGHT - ypos;
+     double deltaY = ypos - lastMouseY;
+	 double deltaX = xpos - lastMouseX;
+
+    // Met à jour la position du rectangle en fonction du mouvement de la souris sur l'axe Z
+    rectPositionZ += deltaX * SENSITIVITY;
+	rectPositionY += deltaY * SENSITIVITY;
+
+    // Met à jour la position précédente de la souris
+    lastMouseX = xpos;
+    lastMouseY = ypos;
 }
 
 
@@ -169,45 +220,55 @@ void dessinersectionmur(Objet objettab[])
 }
 void dessinerRaquette(){
 // rect Haut
+		// glPushMatrix();
+		// 	glColor3f(10/255,10/255,10/255);
+		// 	glRotatef(90.0,0.,1.,0.);
+		// 	glTranslatef(-4./3.,0,0);
+		// 	glScalef(1./20.,4,2);
+		// 	drawSquare();
+		// glPopMatrix();
+
+		glColor4f(10/255,10/255,10/255,rectOpacity);
 		glPushMatrix();
-			glColor3f(10/255,10/255,10/255);
+			
 			glRotatef(90.0,0.,1.,0.);
 			glTranslatef(-4./3.,0,0);
-			glScalef(1./20.,4,2);
+			glScalef(4.,4,2);
 			drawSquare();
 		glPopMatrix();
+
 // tu me preferes flo ???? pas segolene !!!!
 // il est jaloux que je bosse le projet pendant mes vacances
 		// rect Bas
-		glPushMatrix();
-			glColor3f(10/255,10/255,10/255);
-			glRotatef(90.0,0.,1.,0.);
-			glTranslatef(4./3.,0,0);
-			glScalef(1./20.,4,2);
-			drawSquare();
-		glPopMatrix();		
+		// glPushMatrix();
+		// 	glColor3f(10/255,10/255,10/255);
+		// 	glRotatef(90.0,0.,1.,0.);
+		// 	glTranslatef(4./3.,0,0);
+		// 	glScalef(1./20.,4,2);
+		// 	drawSquare();
+		// glPopMatrix();		
 
-		// rect Droit
-		glPushMatrix();
-			glColor3f(10/255,10/255,10/255);
-			glTranslatef(0,2,0);
-			glRotatef(90.0,1.,0.,0.);			
-			glRotatef(90.0,0.,1.,0.);
+		// // rect Droit
+		// glPushMatrix();
+		// 	glColor3f(10/255,10/255,10/255);
+		// 	glTranslatef(0,2,0);
+		// 	glRotatef(90.0,1.,0.,0.);			
+		// 	glRotatef(90.0,0.,1.,0.);
 
-			glScalef(1./20.,4.*2./3.,2);
+		// 	glScalef(1./20.,4.*2./3.,2);
 			
-			drawSquare();
-		glPopMatrix();	
+		// 	drawSquare();
+		// glPopMatrix();	
 
-		// rect Gauche
-		glPushMatrix();
-			glColor3f(10/255,10/255,10/255);
-			glTranslatef(0,-2,0);
-			glRotatef(90.0,1.,0.,0.);
-			glRotatef(90.0,0.,1.,0.);
-			glScalef(1./20.,4.*2./3.,2);
-			drawSquare();
-		glPopMatrix();
+		// // rect Gauche
+		// glPushMatrix();
+		// 	glColor3f(10/255,10/255,10/255);
+		// 	glTranslatef(0,-2,0);
+		// 	glRotatef(90.0,1.,0.,0.);
+		// 	glRotatef(90.0,0.,1.,0.);
+		// 	glScalef(1./20.,4.*2./3.,2);
+		// 	drawSquare();
+		// glPopMatrix();
 }
 
 //déplcament balle /////////////////////////////////////////////////////////////
@@ -259,7 +320,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 
-	glfwSetCursorPosCallback(window, miseAJourPositionSouris);
 	glfwSetWindowSizeCallback(window,onWindowResized);
 	glfwSetKeyCallback(window, onKey);
 
@@ -270,7 +330,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	float teta = 0;
 
-	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	// créer les objets 
 	
@@ -368,6 +430,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 
 	light(objettab);
+	
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -392,28 +455,17 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		/* Scene rendering */
 		
-		// Dessiner le rectangle à la position de la souris
-        glPushMatrix();
-			glTranslatef(-20, position_souris_x, position_souris_y);
-			glColor3f(1.0,0.0, 0.0); // Couleur rouge
-			drawSquare();
-			// glBegin(GL_QUADS);
-			// 	glVertex2f(-1.0, -1.0);
-			// 	glVertex2f(-1.0, 1.0);
-			// 	glVertex2f(1.0, 1.0);
-			// 	glVertex2f(1.0, -1.0);
-			// glEnd();
-        glPopMatrix();
 		///////////////////////////////mur 
 		
 		
 		// // rect Haut
 		// glPushMatrix();
 		// 	glColor3f(100.0/255,100.0/255,100.0/255);
-		// 	glScalef(40,15,1);
-		// 	glTranslatef(0,0,5);
+		// 	// glScalef(20,15,1);
+		// 	glTranslatef(-25,0,5);
 		// 	drawSquare();
 		// glPopMatrix();
+
 
 		// // rect Bas
 		// glPushMatrix();
@@ -485,7 +537,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		//dessin raquette
 		glPushMatrix();
-			glTranslatef(-20,-((10.0/WINDOW_WIDTH)*xpos-5)*aspectRatio,(-10.0/WINDOW_HEIGHT)*ypos+5);
+			glTranslatef(-20,-rectPositionZ,-rectPositionY);
 			// glTranslatef(0, xpos,ypos);
 			dessinerRaquette();
 		glPopMatrix();
@@ -519,6 +571,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			tempspasse = glfwGetTime() - startTime;
 		}
 	}
+	
 
 	glfwTerminate();
 	return 0;
