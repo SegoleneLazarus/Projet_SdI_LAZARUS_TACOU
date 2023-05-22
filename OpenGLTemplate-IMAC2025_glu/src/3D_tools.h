@@ -21,6 +21,24 @@
 
 #define NB_SEG_CIRCLE 64
 
+typedef struct Balle{
+	float xpos;
+	float ypos;
+	float zpos;
+	float vitx;
+	float vity;
+	float vitz;
+	Balle() {};
+	Balle(float xpos, float ypos, float zpos,float vitx,float vity,float vitz) 
+	{
+        this->xpos = xpos;
+        this->ypos = ypos;
+		this->zpos = zpos; 
+		this->vitx = vitx;
+		this->vity = vity;
+		this->vitz = vitz;
+	}
+} Balle;
 typedef struct Objet{
 	// char nom;
 	float xpos;
