@@ -43,7 +43,7 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-float rectOpacity = 0.f;
+float rectOpacity = 0.5f;
 // Texture du rectangle
 unsigned int textureRaqu;
 // Charge une texture depuis un fichier
@@ -431,6 +431,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	light(objettab);
 	
+	// Activate transparency
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -451,7 +454,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		
 		/* Initial scenery setup */
 		
-
+			
+		
 
 		/* Scene rendering */
 		
@@ -571,6 +575,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			tempspasse = glfwGetTime() - startTime;
 		}
 	}
+
+	//draw
+	glDisable(GL_BLEND);
 	
 
 	glfwTerminate();
