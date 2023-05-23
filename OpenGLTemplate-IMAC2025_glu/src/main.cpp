@@ -89,7 +89,7 @@ float rectPositionY = 0.0f;
 
 
 // Sensibilité du mouvement de la souris
-const float SENSITIVITY = 0.01f;
+const float SENSITIVITY = 0.02f;
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -172,7 +172,7 @@ void light(Objet objettab[],int nombredemur)
 	}
 	
 }
-Balle balle=Balle(0,-5,-2,0.,0.1,0.1);
+Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2);
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 {
 	//mur haut bas gauche droite
@@ -183,19 +183,25 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 		if ( balle.zpos<=-5+1)
 		{
 			balle.vitz=sqrt(balle.vitz*balle.vitz);
-		}
+			}
 		if (balle.zpos>=5-1)
 		{
 			balle.vitz=-sqrt(balle.vitz*balle.vitz);
 		}
-	if (balle.xpos>=19.5)// diamètre de la balle est de 1 ? 
+	if (balle.xpos<=-19)// diamètre de la balle est de 1 ? 
 	{
-		if(balle.zpos<(-rectPositionZ)+2 && balle.zpos>(-rectPositionZ)-2 && balle.ypos<(-rectPositionY)+2 && balle.ypos>(-rectPositionY)-2)// test si la balle touche la raquette 
+		if(balle.zpos<(-rectPositionY)+4 && balle.zpos>(-rectPositionY)-4 && balle.ypos<(-rectPositionZ)+4 && balle.ypos>(-rectPositionZ)-4)// test si la balle touche la raquette 
 		{
 			balle.vitx=-balle.vitx;
 		}
-		else balle.vitx=0;
+		else 
+		{
+			balle.vitx=0;
+			balle.vity=0;
+			balle.vitz=0;
+		}	
 	}
+	if (balle.xpos>=19)balle.vitx=-balle.vitx;
 	balle.xpos+=balle.vitx;
 	balle.ypos+=balle.vity;
 	balle.zpos+=balle.vitz;
@@ -563,8 +569,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		balle=deplacementballe(balle,rectPositionY,rectPositionZ);
 
-		
-		
+
+
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
