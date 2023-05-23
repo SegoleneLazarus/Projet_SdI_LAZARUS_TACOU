@@ -172,20 +172,22 @@ void light(Objet objettab[],int nombredemur)
 	}
 	
 }
-Balle balle=Balle(0,-5,-2,0.1,0.1,0.1);
+Balle balle=Balle(0,-5,-2,0.,0.1,0.1);
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 {
-	for(int i=0;i<4;i++)//mur haut bas droite et gauche
-	{
-		if (balle.ypos>objettab[i].ypos || balle.ypos<objettab[i].ypos)
+	//mur haut bas gauche droite
+		if (balle.ypos>=15./2-1 || balle.ypos<=-15./2+1)
 		{
 			balle.vity=-balle.vity;
 		}
-		if (balle.zpos>objettab[i].zpos || balle.zpos<objettab[i].zpos)
+		if ( balle.zpos<=-5+1)
 		{
-			balle.vitz=-balle.vitz;
+			balle.vitz=sqrt(balle.vitz*balle.vitz);
 		}
-	}
+		if (balle.zpos>=5-1)
+		{
+			balle.vitz=-sqrt(balle.vitz*balle.vitz);
+		}
 	if (balle.xpos>=19.5)// diamètre de la balle est de 1 ? 
 	{
 		if(balle.zpos<(-rectPositionZ)+2 && balle.zpos>(-rectPositionZ)-2 && balle.ypos<(-rectPositionY)+2 && balle.ypos>(-rectPositionY)-2)// test si la balle touche la raquette 
@@ -204,8 +206,8 @@ void dessinerballe(Balle balle)
 {
 	glColor3f(100/255,10/255,10/255);
 	glRotatef(90.,0,1,0);
-	//glScalef(2,2,2);
-	glTranslatef(balle.xpos,balle.ypos,balle.zpos);
+	glScalef(1,1,1);
+	glTranslatef(balle.zpos,balle.ypos,balle.xpos);
 	drawCircle();
 
 }
@@ -302,23 +304,6 @@ void dessinerRaquette(){
 		// glPopMatrix();
 }
 
-//déplcament balle /////////////////////////////////////////////////////////////
-float vitx=0.1;
-float vity=0.;
-float posxballe=-20.;
-float posyballe=0.;
-void moveball(float vitx,float vity,float *posxballe,float *posyballe)
-{
-	*posxballe+=vitx;
-	*posyballe+=vity; 
-}
-double xpos, ypos;
-// define prend le rôle d'une constante mais il va tout remplacer avant la compilation par sa valeur
-#define NBTAB 1500
-float tabX[NBTAB];
-float tabY[NBTAB];
-int nbPoint = 0;
-int entered;
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
