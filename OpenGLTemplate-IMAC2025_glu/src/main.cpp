@@ -9,7 +9,7 @@
 #include "draw_scene.h"
 
 
-int nombreobstacles;
+int nombredobstacle=5;
 Objet objettab[100];
 int nombredemur=32;
 
@@ -154,22 +154,24 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-void light(Objet objettab[],int nombredemur)
+void light(Objet objettab[],int nombredemur,int nombredobstacle)
 {
 	float modificateurlumineux=3;
 	for(int i=0;i<nombredemur;i++)//les 16 premiers objets sont les murs; 
 	{
-		objettab[i].r-=((objettab[i].xpos+25)*modificateurlumineux)/255;
-		if(objettab[i].r>1)objettab[i].r=1;
-		if(objettab[i].r<0) objettab[i].r=0;
+		objettab[i].lumiere=((objettab[i].xpos+25)*modificateurlumineux)/255;
 
-		objettab[i].v-=((objettab[i].xpos+25)*modificateurlumineux)/255;
-		if(objettab[i].v>1)objettab[i].v=1;
-		if(objettab[i].v<0) objettab[i].v=0;
+		// objettab[i].r-=((objettab[i].xpos+25)*modificateurlumineux)/255;
+		// if(objettab[i].r>1)objettab[i].r=1;
+		// if(objettab[i].r<0) objettab[i].r=0;
 
-		objettab[i].b-=((objettab[i].xpos+25)*modificateurlumineux)/255;
-		if(objettab[i].b>1)objettab[i].b=1;
-		if(objettab[i].b<0) objettab[i].b=0;
+		// objettab[i].v-=((objettab[i].xpos+25)*modificateurlumineux)/255;
+		// if(objettab[i].v>1)objettab[i].v=1;
+		// if(objettab[i].v<0) objettab[i].v=0;
+
+		// objettab[i].b-=((objettab[i].xpos+25)*modificateurlumineux)/255;
+		// if(objettab[i].b>1)objettab[i].b=1;
+		// if(objettab[i].b<0) objettab[i].b=0;
 	}
 	
 }
@@ -197,8 +199,9 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		}
 		else 
 		{	
-			balle.attrapee=true;
-			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+			balle.vitx=-balle.vitx;
+			// balle.attrapee=true;
+			// balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			
 		}	
 	}
@@ -387,6 +390,15 @@ void deplacementobstacles(float xsectionmur,int nombredemur,int nombredobstacle)
 		glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
 		drawMur(obstacle);
 	glPopMatrix();
+	glPushMatrix();
+		if (xsectionmur<=40) glTranslatef(20-xsectionmur,0,0);
+		else glTranslatef(100-xsectionmur,0,0);
+		obstacle=objettab[nombredemur+4];
+		glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
+		glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
+		glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
+		drawMur(obstacle);
+	glPopMatrix();
 }
 
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
@@ -453,7 +465,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		//rect haut
 		mur.zpos=5.;
 		objettab[i]=mur;
-		objettab[i]=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f);
+		objettab[i]=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,10.0f,15.f,1.f,0.f,0.f,0.f,0.f,0);
 		// Objet testpls=Objet(xpos,0.f,5.f,100.0f/255.f,100.0f/255.f,255.0f/255.f,40.0f,15.f,1.f,0.f,0.f,0.f,0.f);	
 
 		// rect Bas
@@ -483,46 +495,45 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	//créer obstacles 
 
 	Objet obstacle;
-	int nombredobstacle;
 	//moitié gauche
-	obstacle.r=150.;
-	obstacle.v=150.;
-	obstacle.b=150.;
+	obstacle.r=150./255;
+	obstacle.v=10./255;
+	obstacle.b=10./255;
 	obstacle.sizex=10;
 	obstacle.sizey=15./2;
 	obstacle.sizez=1;
-	obstacle.xpos=20;
+	obstacle.xpos=0;
 	obstacle.ypos=-15./4;
 	obstacle.zpos=0;
 	obstacle.anglerotate=90.0;
 	obstacle.rotatex=0;
 	obstacle.rotatey=1.0;
 	obstacle.rotatez=0;
-	objettab[nombredemur+1]=obstacle;
+	objettab[nombredemur]=obstacle;
 
 	//moitié droite
 	obstacle.ypos=-15./4;
-	objettab[nombredemur+2]=obstacle;
+	objettab[nombredemur+1]=obstacle;
 
 	//moitié basse
 	obstacle.ypos=0;
 	obstacle.zpos=-5./2;
 	obstacle.sizex=5;
 	obstacle.sizey=15;
-	objettab[nombredemur+3]=obstacle;
+	objettab[nombredemur+2]=obstacle;
 
 	//moitié haute 
 	obstacle.zpos=5./2;
-	objettab[nombredemur+4]=obstacle;
+	objettab[nombredemur+3]=obstacle;
 	
 	//moitié gauche décalée au centre
 	obstacle.zpos=0;
 	obstacle.sizex=10;
 	obstacle.sizey=15./2;
-	objettab[nombredemur+5]=obstacle;
+	objettab[nombredemur+4]=obstacle;
 
 
-	light(objettab,nombredemur);
+	light(objettab,nombredemur,nombredobstacle);
 	
 	// Activate transparency
 	glEnable(GL_BLEND);

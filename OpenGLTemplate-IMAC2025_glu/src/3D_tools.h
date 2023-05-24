@@ -56,10 +56,11 @@ typedef struct Objet{
 	float rotatex;
 	float rotatey;
 	float rotatez;
+	float lumiere;
 
 	Objet() {} // là un constructeur vide
 
-    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez) {
+    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez,float lumiere) {
         this->xpos = xpos;
         this->ypos = ypos;
         this->zpos = zpos;
@@ -73,6 +74,7 @@ typedef struct Objet{
         this->rotatex = rotatex;
         this->rotatey = rotatey;
 		this->rotatez = rotatez;
+		this->lumiere = lumiere;
     }
 }Objet;
 
