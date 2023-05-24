@@ -7,7 +7,6 @@
 #include <math.h>
 #include "3D_tools.h"
 #include "draw_scene.h"
-/* Structure */
 
 
 int nombreobstacles;
@@ -91,6 +90,8 @@ float rectPositionY = 0.0f;
 // Sensibilité du mouvement de la souris
 const float SENSITIVITY = 0.02f;
 
+Balle attraperballe (GLFWwindow * 	window,double*xposadresse,double*yposadresse,Balle balle, float rectPositionY,float rectPositionZ);
+
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
      double deltaY = ypos - lastMouseY;
@@ -172,8 +173,8 @@ void light(Objet objettab[],int nombredemur)
 	}
 	
 }
-Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2);
-Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
+Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false);
+Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
 {
 	//mur haut bas gauche droite
 		if (balle.ypos>=15./2-1 || balle.ypos<=-15./2+1)
@@ -188,23 +189,27 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ)
 		{
 			balle.vitz=-sqrt(balle.vitz*balle.vitz);
 		}
-	if (balle.xpos<=-19)// diamètre de la balle est de 1 ? 
+	if (balle.xpos<=-19.5)// diamètre de la balle est de 1 ? 
 	{
 		if(balle.zpos<(-rectPositionY)+4 && balle.zpos>(-rectPositionY)-4 && balle.ypos<(-rectPositionZ)+4 && balle.ypos>(-rectPositionZ)-4)// test si la balle touche la raquette 
 		{
 			balle.vitx=-balle.vitx;
 		}
 		else 
-		{
-			balle.vitx=0;
-			balle.vity=0;
-			balle.vitz=0;
+		{	
+			balle.attrapee=true;
+			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+			
 		}	
 	}
 	if (balle.xpos>=19)balle.vitx=-balle.vitx;
+	if (balle.attrapee==false)
+	{
 	balle.xpos+=balle.vitx;
 	balle.ypos+=balle.vity;
 	balle.zpos+=balle.vitz;
+	}
+	
 	return balle;
 }
 
@@ -319,6 +324,31 @@ int xsectionmur;
 
 
 
+GLFWmousebuttonfun glfwSetMouseButtonCallback	(	GLFWwindow * 	window,
+GLFWmousebuttonfun 	cbfun )	;
+void glfwGetCursorPos	(	GLFWwindow * 	window,
+double * 	xpos,
+double * 	ypos 
+);
+
+
+Balle attraperballe (GLFWwindow * 	window,double*xposadresse,double*yposadresse,Balle balle, float rectPositionY,float rectPositionZ)
+{
+	balle.vitx=0;
+	balle.vity=0;
+	balle.vitz=0;
+	balle.ypos=rectPositionY;
+	balle.zpos=rectPositionZ;
+	double balisex =*xposadresse;
+	double balisey =*yposadresse;
+	glfwGetCursorPos(window,xposadresse,yposadresse);
+	if (balisex!=*xposadresse || balisey!=*yposadresse)
+	{
+		balle.vitx=-1;
+		balle.attrapee=false;
+	}
+}
+
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
 {
 	/* GLFW initialisation */
@@ -357,7 +387,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 	// créer les objets 
-	
+	double xposmousebuttoncallback,yposmousebuttoncallback; 
 
 	//créer mur 
 	Objet mur;
@@ -567,7 +597,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			dessinerRaquette();
 		glPopMatrix();
 
-		balle=deplacementballe(balle,rectPositionY,rectPositionZ);
+		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
 
 
 
