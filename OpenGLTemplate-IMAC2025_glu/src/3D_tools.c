@@ -19,8 +19,16 @@ float toRad(float deg) {
 
 void drawMur(Objet mur){
 	glBegin(GL_TRIANGLE_FAN);
-		azffaeaef
-		glColor3f(mur.r-mur.lumiere,mur.v-mur.lumiere,mur.b-mur.lumiere);
+		float r=mur.r-mur.lumiere; 
+		if(r>1)r=1;
+		if(r<0)r=0;
+		float v=mur.v-mur.lumiere;
+		if(v>1)v=1;
+		if(v<0)v=0;
+		float b=mur.b-mur.lumiere;
+		if(b>1)b=1;
+		if(b<0)b=0;
+		glColor3f(r,v,b);
 		glVertex3f(-0.5,-0.5,0.0);
 		glVertex3f(0.5,-0.5,0.0);
 		glVertex3f(0.5,0.5,0.0);
