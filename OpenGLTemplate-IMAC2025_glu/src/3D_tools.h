@@ -29,9 +29,11 @@ typedef struct Balle{
 	float vity;
 	float vitz;
 	bool attrapee;
+	float rayon;
 	Balle() {};
-	Balle(float xpos, float ypos, float zpos,float vitx,float vity,float vitz,bool attrapee) 
+	Balle(float xpos, float ypos, float zpos,float vitx,float vity,float vitz,bool attrapee,float rayon) 
 	{
+		this->rayon=rayon;
         this->xpos = xpos;
         this->ypos = ypos;
 		this->zpos = zpos; 

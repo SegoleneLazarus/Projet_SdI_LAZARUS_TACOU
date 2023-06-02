@@ -157,25 +157,25 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 void light(Objet objettab[],int nombredemur,int nombredobstacle)
 {
 	float modificateurlumineux=3;
-	for(int i=0;i<nombredemur+nombredobstacle;i++)//les 16 premiers objets sont les murs; 
+	for(int i=0;i<nombredemur+nombredobstacle;i++)
 	{
 		objettab[i].lumiere=((objettab[i].xpos+25)*modificateurlumineux)/255;
 	}
 	
 }
-Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false);
+Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false,1);
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
 {
 	//mur haut bas gauche droite
-		if (balle.ypos>=15./2-1 || balle.ypos<=-15./2+1)
+		if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
 		{
 			balle.vity=-balle.vity;
 		}
-		if ( balle.zpos<=-5+1)
+		if ( balle.zpos<=-5+balle.rayon)
 		{
 			balle.vitz=sqrt(balle.vitz*balle.vitz);
 			}
-		if (balle.zpos>=5-1)
+		if (balle.zpos>=5-balle.rayon)
 		{
 			balle.vitz=-sqrt(balle.vitz*balle.vitz);
 		}
@@ -192,6 +192,21 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 			// balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			
 		}	
+		// mtn avec les obstacles : on va considérer que la balle rebondit sur les obstacles comme si elle était un carré (sans compter les rebonds bizarres sur les coins) 
+		for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
+		{
+			Objet obstacle=objettab[i];
+			float hauteur=obstacle.sizex;
+			float largeur=obstacle.sizey;
+			float centre=obstacle.ypos;
+			float posy=balle.ypos;
+			float rayon=balle.rayon;
+			if (posy-rayon<centre+largeur/2 && posy+rayon>centre-largeur/2 && posy+rayon>centre-hauteur/2 && posy-rayon<centre+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
+				if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
+				{
+					balle.vitx=-balle.vitx;
+				}
+		}
 	}
 	if (balle.xpos>=19)balle.vitx=-balle.vitx;
 	if (balle.attrapee==false)
@@ -208,7 +223,7 @@ void dessinerballe(Balle balle)
 {
 	glColor3f(100/255,10/255,10/255);
 	glRotatef(90.,0,1,0);
-	glScalef(1,1,1);
+	glScalef(balle.rayon,balle.rayon,balle.rayon);
 	glTranslatef(balle.zpos,balle.ypos,balle.xpos);
 	drawCircle();
 
@@ -304,76 +319,28 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	Objet obstacle=objettab[nombredemur];
 
 	obstacle.xpos=60-xsectionmur;
-	obstacle=objettab[nombredemur];
+	objettab[nombredemur]=obstacle;
 
 	obstacle=objettab[nombredemur+1];
 	if (xsectionmur<=70.) obstacle.xpos=50-xsectionmur;
 	else obstacle.xpos=130-xsectionmur;
-	obstacle=objettab[nombredemur+1];
+	objettab[nombredemur+1]=obstacle;
 		
 	obstacle=objettab[nombredemur+2];
 	if (xsectionmur<=60) obstacle.xpos=40-xsectionmur;
 	else obstacle.xpos=120-xsectionmur;
-	obstacle=objettab[nombredemur+2];
+	objettab[nombredemur+2]=obstacle;
 	
 	obstacle=objettab[nombredemur+3];
 	if (xsectionmur<=50) obstacle.xpos=30-xsectionmur;
 	else obstacle.xpos=110-xsectionmur;
-	obstacle=objettab[nombredemur+3];
+	objettab[nombredemur+3]=obstacle;
 
 	obstacle=objettab[nombredemur+4];
 	if (xsectionmur<=40) obstacle.xpos=20-xsectionmur;
 	else obstacle.xpos=100-xsectionmur;
-	obstacle=objettab[nombredemur+4];
+	objettab[nombredemur+4]=obstacle;
 	
-
-	//ancien
-
-	// glPushMatrix();
-	// 	//glTranslatef(60-xsectionmur,0,0);
-	// 	obstacle.xpos=60-xsectionmur;
-	// 	obstacle=objettab[nombredemur];
-	// 	glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
-	// 	glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
-	// 	glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
-	// 	drawMur(obstacle);
-	// glPopMatrix();
-	// glPushMatrix();
-	// 	if (xsectionmur<=70.) glTranslatef(50-xsectionmur,0,0);
-	// 	else glTranslatef(130-xsectionmur,0,0);
-	// 	obstacle=objettab[nombredemur+1];
-	// 	glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
-	// 	glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
-	// 	glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
-	// 	drawMur(obstacle);
-	// glPopMatrix();
-	// glPushMatrix();
-	// 	if (xsectionmur<=60) glTranslatef(40-xsectionmur,0,0);
-	// 	else glTranslatef(120-xsectionmur,0,0);
-	// 	obstacle=objettab[nombredemur+2];
-	// 	glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
-	// 	glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
-	// 	glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
-	// 	drawMur(obstacle);
-	// glPopMatrix();
-	// glPushMatrix();
-	// 	if (xsectionmur<=50) glTranslatef(30-xsectionmur,0,0);
-	// 	else glTranslatef(110-xsectionmur,0,0);
-	// 	obstacle=objettab[nombredemur+3];
-	// 	glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
-	// 	glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
-	// 	glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
-	// 	drawMur(obstacle);
-	// glPopMatrix();
-	// glPushMatrix();
-	// 	if (xsectionmur<=40) glTranslatef(20-xsectionmur,0,0);
-	// 	else glTranslatef(100-xsectionmur,0,0);
-	// 	obstacle=objettab[nombredemur+4];
-	// 	glTranslatef(obstacle.xpos,obstacle.ypos,obstacle.zpos);
-	// 	glRotatef(obstacle.anglerotate,obstacle.rotatex,obstacle.rotatey,obstacle.rotatez);
-	// 	glScalef(obstacle.sizex,obstacle.sizey,obstacle.sizez);
-	// 	drawMur(obstacle);
-	// glPopMatrix();
 }
 
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
@@ -471,9 +438,9 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	Objet obstacle;
 	//moitié gauche
-	obstacle.r=150./255;
-	obstacle.v=10./255;
-	obstacle.b=10./255;
+	obstacle.r=250./255;
+	obstacle.v=110./255;
+	obstacle.b=110./255;
 	obstacle.lumiere=0.;
 	obstacle.sizex=10;
 	obstacle.sizey=15./2;
@@ -539,27 +506,24 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 		/* Scene rendering */
 
+		//déplacement et affichage
+		light(objettab,nombredemur,nombredobstacle);
 
-	// obstacles 
-	deplacementobstacles(xsectionmur,nombredemur);
+		deplacementobstacles(xsectionmur,nombredemur);
 
-	//affichage de murs et obstacles
-	light(objettab,nombredemur,nombredobstacle);
+		for (int i=0;i<nombredemur+nombredobstacle;i++)
+			{
 
-	for (int i=0;i<nombredemur+nombredobstacle;i++)
-        {
+				mur=objettab[i];//plus un mur mais mur ou obstacle
+				glPushMatrix();
+					glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+					glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
+					glScalef(mur.sizex,mur.sizey,mur.sizez);
+					drawMur(mur);
+				glPopMatrix();
+			}
 
-            mur=objettab[i];//plus un mur mais mur ou obstacle
-            glPushMatrix();
-                
-                glTranslatef(mur.xpos,mur.ypos,mur.zpos);
-				glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
-				glScalef(mur.sizex,mur.sizey,mur.sizez);
-                drawMur(mur);
-            glPopMatrix();
-        }
-
-	//sectionmur et leur déplacement
+		//sectionmur 
 		xsectionmur=(xsectionmur+0.2f);
 		if (xsectionmur>=80.f)xsectionmur-=80.f;
 		glPushMatrix();
@@ -602,26 +566,24 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			dessinersectionmur();
 		glPopMatrix();
 
-
-
-
-
-		
 		//balle 
 		glPushMatrix();
 			dessinerballe(balle);
 		glPopMatrix();
 
-		//dessin raquette
+		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
+
+
+		//raquette 
 		glPushMatrix();
 			glTranslatef(-20,-rectPositionZ,-rectPositionY);
 			// glTranslatef(0, xpos,ypos);
 			dessinerRaquette();
 		glPopMatrix();
 
-		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
+		
 
-
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 		/* Swap front and back buffers */
