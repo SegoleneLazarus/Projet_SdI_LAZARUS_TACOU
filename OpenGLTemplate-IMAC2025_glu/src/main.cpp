@@ -87,9 +87,11 @@ double lastMouseY = 0.0;
 float rectPositionZ = 0.0f;
 float rectPositionY = 0.0f;
 float xsectionmur = 0;
-bool clic=true;
+bool clic=false;
 float avancement_depuis_dernier_clic=0;
 int bouton; 
+
+float valeur_absolue(float nombre);
 
 
 
@@ -160,14 +162,34 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 	}
 }
 
-void light(Objet objettab[],int nombredemur,int nombredobstacle)
+void light(Objet objettab[],int nombredemur,int nombredobstacle,Balle balle)
 {
-	float modificateurlumineux=3;
+	
+	float maxdistance=0;//maxdistance=75 environ
 	for(int i=0;i<nombredemur+nombredobstacle;i++)
 	{
-		objettab[i].lumiere=((objettab[i].xpos+25)*modificateurlumineux)/255;
+		//caméra source lumineuse
+		objettab[i].lumiere=(objettab[i].xpos+25)*3/255;
+		//balle source lumineuse
+
+		//objettab[i].lumiere-=(30-valeur_absolue(objettab[i].xpos-balle.xpos))*50/(75*255);
+		if(i<nombredemur || balle.xpos<objettab[i].xpos)
+		{
+			//objettab[i].lumiere+=valeur_absolue(objettab[i].xpos-balle.xpos)*1/255;
+		}
+
+		// modificateurlumineux=(50.-valeur_absolue(objettab[i].xpos-balle.xpos))/255;
+		// if (modificateurlumineux<0)modificateurlumineux=0;
+		// objettab[i].lumiere-=modificateurlumineux+50/255;
+		// objettab[i].lumiere+=(1-sqrt((objettab[i].xpos-balle.xpos)*(objettab[i].xpos-balle.xpos)))*modificateurlumineux/255;
+		
+		
 	}
-	
+}
+
+float valeur_absolue(float nombre)
+{
+	return sqrt(nombre*nombre);
 }
 
 Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false,1);
@@ -360,16 +382,17 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	
 }
 
-void avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic)
+void avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle *balle)
 {
 	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien  
 	if (*clic){
 		*avancement_depuis_dernier_clic=0;
 	}
-	if(*avancement_depuis_dernier_clic<5)
+	if(*avancement_depuis_dernier_clic<10)
 	{
-		*avancement_depuis_dernier_clic+=0.2f;
-		*xsectionmur+=0.2f;
+		*avancement_depuis_dernier_clic+=0.4f;
+		*xsectionmur+=0.4f;
+		if (balle->xpos>20-balle->rayon)balle->xpos-=0.4f;
 	}
 	*clic=false;
 }
@@ -538,7 +561,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		/* Scene rendering */
 
 		//déplacement et affichage
-		light(objettab,nombredemur,nombredobstacle);
+		light(objettab,nombredemur,nombredobstacle,balle);
 
 		deplacementobstacles(xsectionmur,nombredemur);
 
@@ -561,7 +584,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			clic=true;
 		}
 		bouton=-1;
-		avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic);
+		avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic,&balle);
 		
 		if (xsectionmur>=80.f)xsectionmur-=80.f;
 		glPushMatrix();
