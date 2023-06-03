@@ -86,6 +86,11 @@ double lastMouseY = 0.0;
 // Position du rectangle
 float rectPositionZ = 0.0f;
 float rectPositionY = 0.0f;
+float xsectionmur = 0;
+bool clic=true;
+float avancement_depuis_dernier_clic=0;
+int bouton; 
+
 
 
 // Sensibilité du mouvement de la souris
@@ -221,7 +226,7 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 	balle.ypos+=balle.vity;
 	balle.zpos+=balle.vitz;
 	}
-	
+
 	return balle;
 }
 
@@ -290,7 +295,9 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
 	glfwGetCursorPos(window, &xpos, &ypos);
 }
-float xsectionmur;
+
+
+
 
 
 
@@ -300,6 +307,11 @@ void glfwGetCursorPos	(	GLFWwindow * 	window,
 double * 	xpos,
 double * 	ypos 
 );
+
+
+int glfwGetMouseButton	(	GLFWwindow * 	window,
+int 	button 
+);	
 
 
 Balle attraperballe (GLFWwindow * 	window,double*xposadresse,double*yposadresse,Balle balle, float rectPositionY,float rectPositionZ)
@@ -346,6 +358,20 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	else obstacle.xpos=100-xsectionmur;
 	objettab[nombredemur+4]=obstacle;
 	
+}
+
+void avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic)
+{
+	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien  
+	if (*clic){
+		*avancement_depuis_dernier_clic=0;
+	}
+	if(*avancement_depuis_dernier_clic<5)
+	{
+		*avancement_depuis_dernier_clic+=0.2f;
+		*xsectionmur+=0.2f;
+	}
+	*clic=false;
 }
 
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
@@ -529,7 +555,14 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			}
 
 		//sectionmur 
-		xsectionmur=(xsectionmur+0.2f);
+		bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_LEFT); //
+		if (bouton==GLFW_PRESS)
+		{
+			clic=true;
+		}
+		bouton=-1;
+		avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic);
+		
 		if (xsectionmur>=80.f)xsectionmur-=80.f;
 		glPushMatrix();
 			glTranslatef(60-xsectionmur,0,0);
