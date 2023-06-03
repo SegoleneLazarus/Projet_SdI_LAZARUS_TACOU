@@ -165,23 +165,18 @@ void onKey(GLFWwindow* window, int key, int scancode, int action, int mods)
 void light(Objet objettab[],int nombredemur,int nombredobstacle,Balle balle)
 {
 	
-	float maxdistance=0;//maxdistance=75 environ
 	for(int i=0;i<nombredemur+nombredobstacle;i++)
 	{
 		//caméra source lumineuse
 		objettab[i].lumiere=(objettab[i].xpos+25)*3/255;
+
 		//balle source lumineuse
 
-		//objettab[i].lumiere-=(30-valeur_absolue(objettab[i].xpos-balle.xpos))*50/(75*255);
-		if(i<nombredemur || balle.xpos<objettab[i].xpos)
+		objettab[i].lumiere+=valeur_absolue(objettab[i].xpos-balle.xpos)*1.5/255;
+		if(i>=nombredemur && balle.xpos>objettab[i].xpos)
 		{
-			//objettab[i].lumiere+=valeur_absolue(objettab[i].xpos-balle.xpos)*1/255;
+			objettab[i].lumiere+=30./255;
 		}
-
-		// modificateurlumineux=(50.-valeur_absolue(objettab[i].xpos-balle.xpos))/255;
-		// if (modificateurlumineux<0)modificateurlumineux=0;
-		// objettab[i].lumiere-=modificateurlumineux+50/255;
-		// objettab[i].lumiere+=(1-sqrt((objettab[i].xpos-balle.xpos)*(objettab[i].xpos-balle.xpos)))*modificateurlumineux/255;
 		
 		
 	}
