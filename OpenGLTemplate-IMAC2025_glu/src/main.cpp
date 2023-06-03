@@ -7,6 +7,7 @@
 #include <math.h>
 #include "3D_tools.h"
 #include "draw_scene.h"
+using namespace std;
 
 
 int nombredobstacle=5;
@@ -163,22 +164,24 @@ void light(Objet objettab[],int nombredemur,int nombredobstacle)
 	}
 	
 }
+
 Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false,1);
+
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
 {
 	//mur haut bas gauche droite
-		if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
-		{
-			balle.vity=-balle.vity;
+	if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
+	{
+		balle.vity=-balle.vity;
+	}
+	if ( balle.zpos<=-5+balle.rayon)
+	{
+		balle.vitz=sqrt(balle.vitz*balle.vitz);
 		}
-		if ( balle.zpos<=-5+balle.rayon)
-		{
-			balle.vitz=sqrt(balle.vitz*balle.vitz);
-			}
-		if (balle.zpos>=5-balle.rayon)
-		{
-			balle.vitz=-sqrt(balle.vitz*balle.vitz);
-		}
+	if (balle.zpos>=5-balle.rayon)
+	{
+		balle.vitz=-sqrt(balle.vitz*balle.vitz);
+	}
 	if (balle.xpos<=-19.5)// diamètre de la balle est de 1 ? 
 	{
 		if(balle.zpos<(-rectPositionY)+4 && balle.zpos>(-rectPositionY)-4 && balle.ypos<(-rectPositionZ)+4 && balle.ypos>(-rectPositionZ)-4)// test si la balle touche la raquette 
@@ -192,22 +195,25 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 			// balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			
 		}	
-		// mtn avec les obstacles : on va considérer que la balle rebondit sur les obstacles comme si elle était un carré (sans compter les rebonds bizarres sur les coins) 
-		for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
-		{
-			Objet obstacle=objettab[i];
-			float hauteur=obstacle.sizex;
-			float largeur=obstacle.sizey;
-			float centre=obstacle.ypos;
-			float posy=balle.ypos;
-			float rayon=balle.rayon;
-			if (posy-rayon<centre+largeur/2 && posy+rayon>centre-largeur/2 && posy+rayon>centre-hauteur/2 && posy-rayon<centre+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
-				if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
-				{
-					balle.vitx=-balle.vitx;
-				}
-		}
 	}
+
+	// mtn avec les obstacles : on va considérer que la balle rebondit sur les obstacles comme si elle était un carré (sans compter les rebonds bizarres sur les coins) 
+	for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
+	{
+		Objet obstacle=objettab[i];
+		float hauteur=obstacle.sizex;
+		float largeur=obstacle.sizey;
+		float centrey=obstacle.ypos;
+		float centrez=obstacle.zpos;
+		float posy=balle.ypos;
+		float rayon=balle.rayon;
+		if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posy+rayon>centrez-hauteur/2 && posy-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; S
+			if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
+			{
+				balle.vitx=-balle.vitx;
+			}
+	}
+	
 	if (balle.xpos>=19)balle.vitx=-balle.vitx;
 	if (balle.attrapee==false)
 	{
@@ -226,7 +232,6 @@ void dessinerballe(Balle balle)
 	glScalef(balle.rayon,balle.rayon,balle.rayon);
 	glTranslatef(balle.zpos,balle.ypos,balle.xpos);
 	drawCircle();
-
 }
 
 void dessinersectionmur()
