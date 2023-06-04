@@ -157,6 +157,11 @@ Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false,1);
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
 {
 	//mur haut bas gauche droite
+	if(balle.attrapee)
+	{
+		balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+		return balle;
+	}
 	if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
 	{
 		balle.vity=-balle.vity;
@@ -169,17 +174,16 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 	{
 		balle.vitz=-sqrt(balle.vitz*balle.vitz);
 	}
-	if (balle.xpos<=-19.5)// diamètre de la balle est de 1 ? 
+	if (balle.xpos<=-20+balle.rayon)
 	{
-		if(balle.zpos<(-rectPositionY)+4 && balle.zpos>(-rectPositionY)-4 && balle.ypos<(-rectPositionZ)+4 && balle.ypos>(-rectPositionZ)-4)// test si la balle touche la raquette 
+		if(balle.zpos<(rectPositionY)+4 && balle.zpos>(rectPositionY)-4 && balle.ypos<(rectPositionZ)+4 && balle.ypos>(rectPositionZ)-4)// test si la balle touche la raquette 
 		{
 			balle.vitx=-balle.vitx;
 		}
 		else 
 		{	
-			// balle.vitx=-balle.vitx;
-			// balle.attrapee=true;
 			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+			balle.attrapee=true;
 			
 		}	
 	}
@@ -216,9 +220,9 @@ void dessinerballe(Balle balle)
 {
 	glColor3f(100/255,10/255,10/255);
 	glRotatef(90.,0,1,0);
-	glScalef(balle.rayon,balle.rayon,balle.rayon);
+	// glScalef(balle.rayon,balle.rayon,balle.rayon);
 	glTranslatef(balle.zpos,balle.ypos,balle.xpos);// parfois la logique elle même cesse de régenter; 
-	drawCircle();
+	drawCarre();
 }
 
 void dessinersectionmur()
@@ -296,16 +300,9 @@ Balle attraperballe (GLFWwindow * 	window,double*xposadresse,double*yposadresse,
 	balle.vitx=0;
 	balle.vity=0;
 	balle.vitz=0;
-	balle.ypos=rectPositionZ;
-	balle.zpos=rectPositionY;
-	double balisex =*xposadresse;
-	double balisey =*yposadresse;
-	glfwGetCursorPos(window,xposadresse,yposadresse);
-	// if (balisex!=*xposadresse || balisey!=*yposadresse)
-	// {
-	// 	balle.vitx=-1;
-	// 	balle.attrapee=false;
-	// }
+	balle.ypos=rectPositionY;
+	balle.zpos=-rectPositionZ-1;
+	return balle;
 }
 
 void deplacementobstacles(float xsectionmur,int nombredemur)
@@ -340,15 +337,19 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle balle)
 {
 	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien  
-	if (*clic){
-		*avancement_depuis_dernier_clic=0;
-	}
-	if(*avancement_depuis_dernier_clic<10)
+	if (not balle.attrapee)
 	{
-		*avancement_depuis_dernier_clic+=0.4f;
-		*xsectionmur+=0.4f;
-		if (balle.xpos>=-19+balle.rayon)balle.xpos-=0.4f;
+		if (*clic){
+		*avancement_depuis_dernier_clic=0;
+		}
+		if(*avancement_depuis_dernier_clic<10)
+		{
+			*avancement_depuis_dernier_clic+=0.4f;
+			*xsectionmur+=0.4f;
+			if (balle.xpos>=-19+balle.rayon)balle.xpos-=0.4f;
+		}
 	}
+	
 	*clic=false;
 	return balle;
 }
@@ -384,25 +385,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
 
-	// TEXTURE BALLE
-
-	GLuint tex;
-	glGenTextures(1, &tex);
-
-	glBindTexture(GL_TEXTURE_2D, tex);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	int x,y,n;
-	unsigned char* imageBalle = stbi_load("doc/logo_Gavroche.png",&x, &y, &n, 0);
-	 if (imageBalle == NULL) {
-		printf("Erreur lors du chargement de l'image !\n");
-    }
-	else{
-		printf("image chargée hihi\n");
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBalle);
-	// END
+	
 
 	float teta = 0;
 
@@ -512,6 +495,28 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	// TEXTURE BALLE
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	int x,y,n;
+	// stbi_set_flip_vertically_on_load(true);
+	unsigned char* imageBalle = stbi_load("../doc/logo_Gavroche.png",&x, &y, &n, 0);
+	 if (imageBalle == NULL) {
+		printf("Erreur lors du chargement de l'image !\n");
+    }
+	else{
+		printf("image chargée hihi\n");
+	}
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBalle);
+	// END
+
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -604,9 +609,19 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		glPopMatrix();
 
 		//balle 
-		glPushMatrix();
-			dessinerballe(balle);
-		glPopMatrix();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+		glEnable(GL_TEXTURE_2D);
+		
+			glBindTexture(GL_TEXTURE_2D,tex);
+			glPushMatrix();
+				dessinerballe(balle);
+			glPopMatrix();
+
+		glDisable(GL_TEXTURE_2D);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
 
@@ -649,7 +664,11 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	}
 
 	//draw
+	stbi_image_free(imageBalle);
+	glDeleteTextures(1, &tex);
+
 	glDisable(GL_BLEND);
+	
 	
 
 	glfwTerminate();

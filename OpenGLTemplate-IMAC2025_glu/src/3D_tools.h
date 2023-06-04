@@ -92,6 +92,8 @@ void setCamera();
 /* Draw cannonic objet functions */
 void drawSquare();
 
+void drawCarre();
+
 void drawCircle();
 
 void drawCone();
