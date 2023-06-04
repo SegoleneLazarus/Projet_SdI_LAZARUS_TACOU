@@ -6,7 +6,7 @@ float phy = 60.0f; // Angle between z axis and viewpoint
 float dist_zoom = 30.0f; // Distance between origin and viewpoint
 
 void setCamera() {
-	gluLookAt(-35.,0.,0.,
+	gluLookAt(-30.,0.,0.,
 			  0.0,0.0,0.0,
 			  0.0,0.0,1.0);
 }
@@ -38,20 +38,20 @@ void drawMur(Objet mur){
 
 void drawSquare() {
 	glBegin(GL_TRIANGLE_FAN);
-		glVertex3f(-0.5,-0.5,0.0);
-		glVertex3f(0.5,-0.5,0.0);
-		glVertex3f(0.5,0.5,0.0);
-		glVertex3f(-0.5,0.5,0.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.5,-0.5,0.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5,-0.5,0.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.5,0.5,0.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5,0.5,0.0);
 	glEnd();
 }
 
 void drawCarre(){
 	glBegin(GL_QUADS);
 		glColor3f(1,1.0,1.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(-1.f, 1.f);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(1.f, 1.f);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(1.f, -1.f);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.f, -1.f);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.f, 1.f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(1.f, 1.f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(1.f, -1.f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(-1.f, -1.f);
 	glEnd();
 }
 

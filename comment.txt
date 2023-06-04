@@ -1,7 +1,7 @@
 balle : cercle avec une texture -> gérer la perspective (automatique
 raquette : littéralement un carré vide (fonction carré OU fonction glPoints mais pas vraiment)
 	OK positionnée par rapport à la souris -> glfwGetCursorPos OK
-	lancer la balle au clic
+	AF lancer la balle au clic
 OK corridor : rectangles*4 + contours rectangle blanc qui avancent OK
 
 OK la balle atteint une limite quand envoyée parfaitement OK
@@ -24,19 +24,19 @@ Nouvelle Partie & Quitter le Jeu
 "Victoire" & "Perdu gros nullos"
 faire un carré et définir une zone de clic voilà merci à tous
 
-fonction pour mesurer le temps (échec) 
+OK fonction pour mesurer le temps (échec) OK
 
 Etapes :
  OK - créer les éléments 3D (raquette(fait), couloir (mur(fait) et sections du murs(fait)),balle(pas fait pcq pas texture)), les positionner(fait) OK
- OK - lumière(euh....) OK 
+ OK - lumière(balle illumine selon y et z OK) OK
  OK - Déplacement des sections du mur (boucle) OK
  OK - Déplacement de la raquette (OUI) OK
  OK - création liste d'obstacles OK
- AC - Déplacement de la balle (rebond balle)  AC 
- AF - implémenter la situtation : la raquette tient la balle AF
+ AC - Déplacement de la balle (rebond balle AC et rebond balle raquette en fonction de position raquette/balle AF )  AC 
+ OK - implémenter la situtation : la raquette tient la balle OK
  AF - implémenter les vies AF
  AF - implémenter les bonus AF
- AF - implémenter les textures AF
+ AC - implémenter les textures AC
  AF - implémenter feur AF 
  AF - le menu AF
  AF - finito pipo Xd  AF 

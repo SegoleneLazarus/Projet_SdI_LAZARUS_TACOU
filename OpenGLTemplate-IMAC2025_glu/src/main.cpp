@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <string>
 #include "3D_tools.h"
 #include "draw_scene.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -55,7 +56,7 @@ float rectPositionZ = 0.0f;
 float rectPositionY = 0.0f;
 float xsectionmur = 0;
 bool clic=false;
-float avancement_depuis_dernier_clic=0;
+float avancement_depuis_dernier_clic=10;
 int bouton; 
 
 float valeur_absolue(float nombre);
@@ -138,10 +139,14 @@ void light(Objet objettab[],int nombredemur,int nombredobstacle,Balle balle)
 		//balle source lumineuse
 
 		objettab[i].lumiere+=valeur_absolue(objettab[i].xpos-balle.xpos)*1.5/255;
-		if(i>=nombredemur && balle.xpos>objettab[i].xpos)
+		if(i>=nombredemur && balle.xpos>objettab[i].xpos) objettab[i].lumiere+=30./255;
+
+		if(valeur_absolue(objettab[i].xpos-balle.xpos)>10) objettab[i].lumiere+=20./255;
+		else 
 		{
-			objettab[i].lumiere+=30./255;
-		}
+			objettab[i].lumiere+=valeur_absolue(objettab[i].ypos-balle.ypos)/255;
+			objettab[i].lumiere+=valeur_absolue(objettab[i].zpos-balle.zpos)/255;
+		} 
 		
 		
 	}
@@ -152,39 +157,55 @@ float valeur_absolue(float nombre)
 	return sqrt(nombre*nombre);
 }
 
-Balle balle=Balle(0,-5,-2,-0.4,0.2,0.2,false,1);
+Balle balle=Balle(-19,-5,-2,-0.4,0.2,0.2,true,1);
 
 Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
 {
 	//mur haut bas gauche droite
 	if(balle.attrapee)
 	{
-		balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
-		return balle;
+		bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_RIGHT); //
+		if (bouton==GLFW_PRESS)
+		{
+			bouton=-1;
+			balle.attrapee=false;
+			balle.vitx=0.4f;
+			balle.xpos=-19+balle.rayon;
+		}
+		else 
+		{
+			bouton=-1;
+			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+			return balle;
+		}
 	}
+
 	if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
 	{
 		balle.vity=-balle.vity;
+		balle.ypos+=balle.vity;
 	}
-	if ( balle.zpos<=-5+balle.rayon)
+	if (balle.zpos>=5-balle.rayon || balle.zpos<=-5+balle.rayon)
 	{
-		balle.vitz=sqrt(balle.vitz*balle.vitz);
-		}
-	if (balle.zpos>=5-balle.rayon)
-	{
-		balle.vitz=-sqrt(balle.vitz*balle.vitz);
+		balle.vitz=-balle.vitz;
+		balle.zpos+=balle.vitz;
 	}
+
 	if (balle.xpos<=-20+balle.rayon)
 	{
-		if(balle.zpos<(rectPositionY)+4 && balle.zpos>(rectPositionY)-4 && balle.ypos<(rectPositionZ)+4 && balle.ypos>(rectPositionZ)-4)// test si la balle touche la raquette 
+		if(balle.zpos<(rectPositionY)+3.5 && balle.zpos>(rectPositionY)-3.5 && balle.ypos<(-rectPositionZ)+3.5 && balle.ypos>(-rectPositionZ)-3.5)// test si la balle touche la raquette 
 		{
 			balle.vitx=-balle.vitx;
+			balle.xpos+=balle.vitx;
+			if(-balle.zpos<(rectPositionY-0.6))balle.vitz-=0.1f;
+			if(-balle.zpos>(rectPositionY+0.6))balle.vitz+=0.1f;
+			if(balle.ypos<(rectPositionZ-0.6))balle.vity+=0.1f;
+			if(balle.ypos>(rectPositionZ+0.6))balle.vity-=0.1f;
 		}
 		else 
 		{	
 			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			balle.attrapee=true;
-			
 		}	
 	}
 
@@ -197,11 +218,13 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		float centrey=obstacle.ypos;
 		float centrez=obstacle.zpos;
 		float posy=balle.ypos;
+		float posz=-balle.zpos;
 		float rayon=balle.rayon;
-		if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posy+rayon>centrez-hauteur/2 && posy-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; S
+		if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
 			if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
 			{
 				balle.vitx=-balle.vitx;
+				balle.xpos+=balle.vitx;
 			}
 	}
 	
@@ -334,6 +357,16 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	
 }
 
+void drawEcranAccueil(){
+	glColor3f(100/255,100/255,100/255);
+	glPushMatrix();
+		glRotatef(90.0,0.,1.,0.);
+		glTranslatef(0.,0,-20.);
+		glScalef(3.,8,2);
+		drawCarre();
+	glPopMatrix();
+}
+
 Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle balle)
 {
 	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien  
@@ -346,13 +379,50 @@ Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_cli
 		{
 			*avancement_depuis_dernier_clic+=0.4f;
 			*xsectionmur+=0.4f;
-			if (balle.xpos>=-19+balle.rayon)balle.xpos-=0.4f;
+			bool flag_obstacle=false;
+			for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
+			{
+				Objet obstacle=objettab[i];
+				float hauteur=obstacle.sizex;
+				float largeur=obstacle.sizey;
+				float centrey=obstacle.ypos;
+				float centrez=obstacle.zpos;
+				float posy=balle.ypos;
+				float posz=balle.zpos;
+				float rayon=balle.rayon;
+				if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
+				{
+					if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
+					{
+						flag_obstacle=true;
+					}
+				}
+			}
+		if (balle.xpos>=-19+balle.rayon && not flag_obstacle)balle.xpos-=0.4f;
 		}
-	}
 	
-	*clic=false;
+		*clic=false;
+	}
 	return balle;
 }
+
+GLuint genTexture(char* filePath){
+		// stbi_set_flip_vertically_on_load(true);
+		int x, y, n; //largeur, hauteur et nb de canaux par pixel
+		unsigned char* image = stbi_load(filePath,&x,&y,&n,STBI_rgb_alpha); //contient les valeurs des pixels
+
+		GLuint texture;
+		glGenTextures(1, &texture); // genere de l'espace pour 1 texture
+
+		glBindTexture(GL_TEXTURE_2D, texture); //openGl fonctionne par etat: on lui dit qu'on est actuellement en train de Wer avec telle texture
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // configure le comportement de la texture
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);// donne concretement les pixels a la texture
+		glBindTexture(GL_TEXTURE_2D, 0); //bonne habitude de code: detacher a chaque fois la texture de son point de bind
+		
+		stbi_image_free(image);
+
+		return texture;
+	}
 
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
 {
@@ -495,26 +565,61 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// TEXTURE BALLE
+	// TEXTURE BALLE franchement ça marche pas flemme
 
-	GLuint tex;
-	glGenTextures(1, &tex);
+	
 
-	glBindTexture(GL_TEXTURE_2D, tex);
+	/*preparation des textures */
+	GLuint textures[2];
+		// for(int i=0; i<2; i++){
+		// 	string number, filePath;
+		// 	// sprintf(number, "%d", i);
+		// 	// strcpy(filePath,"../doc/");
+		// 	std::string str="../doc/";
+		// 	str+=number;
+		// 	str+=".png";
+			// filePath=str.c_str();
+			// filePath=str;
+		// 	textures[i]=genTexture(filePath);
+		// }
+	char filePath[]="../doc/logo_Gavroche.png";
+	char filePath2[]="../doc/bouton_commencer.png";
+	textures[0]=genTexture(filePath);
+	textures[1]=genTexture(filePath2);
+	// textures[2]=genTexture("./doc/logo_Gavroche.png");
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	/*GLuint tex1;
+	glGenTextures(1, &tex1);
+	glBindTexture(GL_TEXTURE_2D, tex1);
+
+	GLuint tex2;
+	glGenTextures(1, &tex2);
+	glBindTexture(GL_TEXTURE_2D, tex2);
 
 	int x,y,n;
-	// stbi_set_flip_vertically_on_load(true);
+
+	// texture1 Balle
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	unsigned char* imageBalle = stbi_load("../doc/logo_Gavroche.png",&x, &y, &n, 0);
-	 if (imageBalle == NULL) {
+	if (imageBalle == NULL) {
 		printf("Erreur lors du chargement de l'image !\n");
     }
 	else{
-		printf("image chargée hihi\n");
+		printf("image balle chargée hihi\n");
 	}
-	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBalle);
+
+	// //texture2 Menu
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	unsigned char* imageMenu = stbi_load("../doc/bouton_commencer.jpg",&x, &y, &n, 0);
+	if (imageMenu == NULL) {
+		printf("Erreur lors du chargement de l'image !\n");
+    }
+	else{
+		printf("image menu chargée hihi\n");
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageMenu);*/
 	// END
 
 	/* Loop until the user closes the window */
@@ -608,23 +713,40 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			dessinersectionmur();
 		glPopMatrix();
 
-		//balle 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-
-		glEnable(GL_TEXTURE_2D);
 		
-			glBindTexture(GL_TEXTURE_2D,tex);
+		
+		
+
+		//balle 
+		glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D,textures[0]);
+		
+			
 			glPushMatrix();
 				dessinerballe(balle);
 			glPopMatrix();
 
+			glBindTexture(GL_TEXTURE_2D, 0);
+
 		glDisable(GL_TEXTURE_2D);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		
 
 		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
 
+		//ecran accueil
+
+		glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D,textures[1]);
+
+			glPushMatrix();
+				drawEcranAccueil();
+			glPopMatrix();
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+
+		
 
 		//raquette 
 		glPushMatrix();
@@ -664,8 +786,10 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	}
 
 	//draw
-	stbi_image_free(imageBalle);
-	glDeleteTextures(1, &tex);
+	// stbi_image_free(imageBalle);
+	// stbi_image_free(imageMenu);
+	// glDeleteTextures(1, &tex1);
+	// glDeleteTextures(2, &tex2);
 
 	glDisable(GL_BLEND);
 	
