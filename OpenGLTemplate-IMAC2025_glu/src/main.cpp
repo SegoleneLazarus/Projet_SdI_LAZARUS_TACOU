@@ -58,6 +58,7 @@ float xsectionmur = 0;
 bool clic=false;
 float avancement_depuis_dernier_clic=10;
 int bouton; 
+bool MEGA_DRAPEAU=true; 
 
 float valeur_absolue(float nombre);
 
@@ -199,8 +200,8 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 			balle.xpos+=balle.vitx;
 			if(-balle.zpos<(rectPositionY-0.6))balle.vitz-=0.1f;
 			if(-balle.zpos>(rectPositionY+0.6))balle.vitz+=0.1f;
-			if(balle.ypos<(rectPositionZ-0.6))balle.vity+=0.1f;
-			if(balle.ypos>(rectPositionZ+0.6))balle.vity-=0.1f;
+			if(balle.ypos<(rectPositionZ+0.6))balle.vity+=0.1f;
+			if(balle.ypos>(rectPositionZ-0.6))balle.vity-=0.1f;
 		}
 		else 
 		{	
@@ -288,7 +289,7 @@ void dessinersectionmur()
 
 void dessinerRaquette(){
 
-		glColor4f(10/255,10/255,10/255,rectOpacity);
+		
 		glPushMatrix();
 			
 			glRotatef(90.0,0.,1.,0.);
@@ -357,7 +358,9 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	
 }
 
+
 void drawEcranAccueil(){
+
 	glColor3f(100/255,100/255,100/255);
 	glPushMatrix();
 		glRotatef(90.0,0.,1.,0.);
@@ -565,28 +568,16 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// TEXTURE BALLE franchement ça marche pas flemme
-
-	
+	// TEXTUREs
 
 	/*preparation des textures */
-	GLuint textures[2];
-		// for(int i=0; i<2; i++){
-		// 	string number, filePath;
-		// 	// sprintf(number, "%d", i);
-		// 	// strcpy(filePath,"../doc/");
-		// 	std::string str="../doc/";
-		// 	str+=number;
-		// 	str+=".png";
-			// filePath=str.c_str();
-			// filePath=str;
-		// 	textures[i]=genTexture(filePath);
-		// }
+	GLuint textures[3];
 	char filePath[]="../doc/logo_Gavroche.png";
 	char filePath2[]="../doc/bouton_commencer.png";
+	char filePath3[]="../doc/commencer.png";
 	textures[0]=genTexture(filePath);
 	textures[1]=genTexture(filePath2);
-	// textures[2]=genTexture("./doc/logo_Gavroche.png");
+	textures[2]=genTexture(filePath3);
 
 
 	/*GLuint tex1;
@@ -643,122 +634,159 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		
 			
 
-
-		/* Scene rendering */
-
-		//déplacement et affichage
-		light(objettab,nombredemur,nombredobstacle,balle);
-
-		deplacementobstacles(xsectionmur,nombredemur);
-
-		for (int i=0;i<nombredemur+nombredobstacle;i++)
-			{
-
-				mur=objettab[i];//plus un mur mais mur ou obstacle
-				glPushMatrix();
-					glTranslatef(mur.xpos,mur.ypos,mur.zpos);
-					glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
-					glScalef(mur.sizex,mur.sizey,mur.sizez);
-					drawMur(mur);
-				glPopMatrix();
-			}
-
-		//sectionmur 
-		bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_LEFT); //
-		if (bouton==GLFW_PRESS)
+		if(MEGA_DRAPEAU)
 		{
-			clic=true;
-		}
-		bouton=-1;
-		balle = avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic,balle);
-		
-		if (xsectionmur>=80.f)xsectionmur-=80.f;
-		glPushMatrix();
-			glTranslatef(60-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=70.) glTranslatef(50-xsectionmur,0,0);
-			else glTranslatef(130-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=60.) glTranslatef(40-xsectionmur,0,0);
-			else glTranslatef(120-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=50.) glTranslatef(30-xsectionmur,0,0);
-			else glTranslatef(110-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=40.) glTranslatef(20-xsectionmur,0,0);
-			else glTranslatef(100-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=30.) glTranslatef(10-xsectionmur,0,0);
-			else glTranslatef(90-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=20) glTranslatef(-xsectionmur,0,0);
-			else glTranslatef(80-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
-		glPushMatrix();
-			if (xsectionmur<=10) glTranslatef(-10-xsectionmur,0,0);
-			else glTranslatef(70-xsectionmur,0,0);
-			dessinersectionmur();
-		glPopMatrix();
+			/*menu*/
+			//ecran accueil
 
-		
-		
-		
-
-		//balle 
-		glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D,textures[0]);
-		
 			
 			glPushMatrix();
-				dessinerballe(balle);
+				glColor4f(200./255.,200./255.,200./255.,rectOpacity);
+				glTranslatef(-20,-rectPositionZ,-rectPositionY);
+				glScalef(0.1,0.1,0.1);
+				// glTranslatef(0, xpos,ypos);
+				dessinerRaquette();
 			glPopMatrix();
+			float Zsouris=-rectPositionY;
+			float Ysouris=-rectPositionZ;
+			if (Ysouris<8 && Ysouris>-8 && Zsouris>-2.5 && Zsouris<2.5)
+			{
+				/*change sprite pcq c pas bon le sprite*/
+				glEnable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D,textures[2]);
 
-			glBindTexture(GL_TEXTURE_2D, 0);
+					glPushMatrix();
+						drawEcranAccueil();
+					glPopMatrix();
 
-		glDisable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D, 0);
+				glDisable(GL_TEXTURE_2D);
 
+				bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_LEFT);
+				if (bouton==GLFW_PRESS)
+				{
+					bouton=-1;
+					MEGA_DRAPEAU=false;	
+				}
+				
+			}
+
+			glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D,textures[1]);
+
+				glPushMatrix();
+					drawEcranAccueil();
+				glPopMatrix();
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+			glDisable(GL_TEXTURE_2D);
+
+			
+			
+			
+			//printf("Y %f\n",-rectPositionZ);
+			//printf("Z %f\n",-rectPositionY);
+
+			}
+		else
+		{
+			/*jeu*/
 		
+			/* Scene rendering */
 
-		balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
+			//déplacement et affichage
+			light(objettab,nombredemur,nombredobstacle,balle);
 
-		//ecran accueil
+			deplacementobstacles(xsectionmur,nombredemur);
 
-		glEnable(GL_TEXTURE_2D);
-			glBindTexture(GL_TEXTURE_2D,textures[1]);
+			for (int i=0;i<nombredemur+nombredobstacle;i++)
+				{
 
+					mur=objettab[i];//plus un mur mais mur ou obstacle
+					glPushMatrix();
+						glTranslatef(mur.xpos,mur.ypos,mur.zpos);
+						glRotatef(mur.anglerotate,mur.rotatex,mur.rotatey,mur.rotatez);
+						glScalef(mur.sizex,mur.sizey,mur.sizez);
+						drawMur(mur);
+					glPopMatrix();
+				}
+
+			//sectionmur 
+			bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_LEFT); //
+			if (bouton==GLFW_PRESS)
+			{
+				clic=true;
+			}
+			bouton=-1;
+			balle = avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic,balle);
+			
+			if (xsectionmur>=80.f)xsectionmur-=80.f;
 			glPushMatrix();
-				drawEcranAccueil();
+				glTranslatef(60-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=70.) glTranslatef(50-xsectionmur,0,0);
+				else glTranslatef(130-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=60.) glTranslatef(40-xsectionmur,0,0);
+				else glTranslatef(120-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=50.) glTranslatef(30-xsectionmur,0,0);
+				else glTranslatef(110-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=40.) glTranslatef(20-xsectionmur,0,0);
+				else glTranslatef(100-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=30.) glTranslatef(10-xsectionmur,0,0);
+				else glTranslatef(90-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=20) glTranslatef(-xsectionmur,0,0);
+				else glTranslatef(80-xsectionmur,0,0);
+				dessinersectionmur();
+			glPopMatrix();
+			glPushMatrix();
+				if (xsectionmur<=10) glTranslatef(-10-xsectionmur,0,0);
+				else glTranslatef(70-xsectionmur,0,0);
+				dessinersectionmur();
 			glPopMatrix();
 
-			glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_TEXTURE_2D);
+			//balle 
+			glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D,textures[0]);
+			
+				
+				glPushMatrix();
+					dessinerballe(balle);
+				glPopMatrix();
 
-		
+				glBindTexture(GL_TEXTURE_2D, 0);
 
-		//raquette 
-		glPushMatrix();
-			glTranslatef(-20,-rectPositionZ,-rectPositionY);
-			// glTranslatef(0, xpos,ypos);
-			dessinerRaquette();
-		glPopMatrix();
+			glDisable(GL_TEXTURE_2D);
 
-		
+			
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			balle=deplacementballe(balle,rectPositionY,rectPositionZ,window,&xposmousebuttoncallback,&yposmousebuttoncallback);
 
+			//raquette 
+			glPushMatrix();
+				glColor4f(10/255,10/255,10/255,rectOpacity);
+				glTranslatef(-20,-rectPositionZ,-rectPositionY);
+				// glTranslatef(0, xpos,ypos);
+				dessinerRaquette();
+			glPopMatrix();
+
+		}
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
