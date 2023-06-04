@@ -1,0 +1,53 @@
+balle : cercle avec une texture -> gérer la perspective (automatique
+raquette : littéralement un carré vide (fonction carré OU fonction glPoints mais pas vraiment)
+	OK positionnée par rapport à la souris -> glfwGetCursorPos OK
+	lancer la balle au clic
+OK corridor : rectangles*4 + contours rectangle blanc qui avancent OK
+
+OK la balle atteint une limite quand envoyée parfaitement OK
+OK jeu généré par rapport à la position de la raquette OK
+
+OK lumière : caméra/balle / lumière ambiante à 0 OK
+
+obstacles : vecteur d'obstacles choisis aléatoirement / 1 chance sur 2 pour pas d'obstacle 
+	même truc que les contours
+	NO ne s'arrêtent jamais sauf qd la raquette touche un mur NO
+	NO balle proche de l'écran = murs avancent plus dutout NO
+ AF bonus : gérer interractions (vie/colle) + vecteur de bonus + 1 chance sur ? AF
+
+OK créer le makefile ouin ( à mettre à jour ) OK               
+
+ AF Menus : (meurs un autre jour) UTILISER GLUT AF
+- début -> 
+- fin ->
+Nouvelle Partie & Quitter le Jeu
+"Victoire" & "Perdu gros nullos"
+faire un carré et définir une zone de clic voilà merci à tous
+
+fonction pour mesurer le temps (échec) 
+
+Etapes :
+ OK - créer les éléments 3D (raquette(fait), couloir (mur(fait) et sections du murs(fait)),balle(pas fait pcq pas texture)), les positionner(fait) OK
+ OK - lumière(euh....) OK 
+ OK - Déplacement des sections du mur (boucle) OK
+ OK - Déplacement de la raquette (OUI) OK
+ OK - création liste d'obstacles OK
+ AC - Déplacement de la balle (rebond balle)  AC 
+ AF - implémenter la situtation : la raquette tient la balle AF
+ AF - implémenter les vies AF
+ AF - implémenter les bonus AF
+ AF - implémenter les textures AF
+ AF - implémenter feur AF 
+ AF - le menu AF
+ AF - finito pipo Xd  AF 
+ 
+
+AF Diviser les fichiers :  AF
+dans main 
+fichier balle (création de la balle et son déplacement et son rebond et perte de vie)
+fichier obstacles (obstacles( création, liste, déplacement),murs) 
+fichier raquette (création ,mouvement, clic) 
+fichier bonus(création,liste,déplacement) 
+fichier menu
+fichier feur
+

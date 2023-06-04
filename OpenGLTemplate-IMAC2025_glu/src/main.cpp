@@ -7,6 +7,8 @@
 #include <math.h>
 #include "3D_tools.h"
 #include "draw_scene.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 using namespace std;
 
 
@@ -17,7 +19,7 @@ int nombredemur=32;
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 900;
 static const unsigned int WINDOW_HEIGHT = 600;
-static const char WINDOW_TITLE[] = "TD04 Ex01";
+static const char WINDOW_TITLE[] = "Couloir de lumière";
 static float aspectRatio = 1.0;
 
 /* Minimal time wanted between two images */
@@ -45,41 +47,6 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 }
 
 float rectOpacity = 0.5f;
-// Texture du rectangle
-unsigned int textureRaqu;
-// Charge une texture depuis un fichier
-// unsigned int loadTexture(const char* filename)
-// {
-//     unsigned int textureID;
-//     glGenTextures(1, &textureID);
-
-//     int width, height, nrChannels;
-//     unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
-//     if (data)
-//     {
-//         GLenum format;
-//         if (nrChannels == 1)
-//             format = GL_RED;
-//         else if (nrChannels == 3)
-//             format = GL_RGB;
-//         else if (nrChannels == 4)
-//             format = GL_RGBA;
-
-//         glBindTexture(GL_TEXTURE_2D, textureID);
-//         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-//         glGenerateMipmap(GL_TEXTURE_2D);
-
-//         stbi_image_free(data);
-//     }
-//     else
-//     {
-//         // std::cerr << "Erreur lors du chargement de la texture" << std::endl;
-//         stbi_image_free(data);
-//         return 0;
-//     }
-
-//     return textureID;
-// }
 
 double lastMouseX = 0.0;
 double lastMouseY = 0.0;
@@ -92,8 +59,6 @@ float avancement_depuis_dernier_clic=0;
 int bouton; 
 
 float valeur_absolue(float nombre);
-
-
 
 // Sensibilité du mouvement de la souris
 const float SENSITIVITY = 0.02f;
@@ -212,9 +177,9 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		}
 		else 
 		{	
-			balle.vitx=-balle.vitx;
+			// balle.vitx=-balle.vitx;
 			// balle.attrapee=true;
-			// balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
+			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			
 		}	
 	}
@@ -265,8 +230,6 @@ void dessinersectionmur()
 			glScalef(1./2.,15,1);
 			drawSquare();
 		glPopMatrix();
-// tu me preferes flo ???? pas segolene !!!!
-// il est jaloux que je bosse le projet pendant mes vacances
 		// rect Bas
 		glPushMatrix();
 			glColor3f(100/255,10/255,10/255);
@@ -295,6 +258,7 @@ void dessinersectionmur()
 			drawSquare();
 		glPopMatrix();
 }
+
 void dessinerRaquette(){
 
 		glColor4f(10/255,10/255,10/255,rectOpacity);
@@ -312,10 +276,6 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 {
 	glfwGetCursorPos(window, &xpos, &ypos);
 }
-
-
-
-
 
 
 GLFWmousebuttonfun glfwSetMouseButtonCallback	(	GLFWwindow * 	window,
@@ -336,16 +296,16 @@ Balle attraperballe (GLFWwindow * 	window,double*xposadresse,double*yposadresse,
 	balle.vitx=0;
 	balle.vity=0;
 	balle.vitz=0;
-	balle.ypos=rectPositionY;
-	balle.zpos=rectPositionZ;
+	balle.ypos=rectPositionZ;
+	balle.zpos=rectPositionY;
 	double balisex =*xposadresse;
 	double balisey =*yposadresse;
 	glfwGetCursorPos(window,xposadresse,yposadresse);
-	if (balisex!=*xposadresse || balisey!=*yposadresse)
-	{
-		balle.vitx=-1;
-		balle.attrapee=false;
-	}
+	// if (balisex!=*xposadresse || balisey!=*yposadresse)
+	// {
+	// 	balle.vitx=-1;
+	// 	balle.attrapee=false;
+	// }
 }
 
 void deplacementobstacles(float xsectionmur,int nombredemur)
@@ -423,6 +383,26 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
+
+	// TEXTURE BALLE
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	int x,y,n;
+	unsigned char* imageBalle = stbi_load("doc/logo_Gavroche.png",&x, &y, &n, 0);
+	 if (imageBalle == NULL) {
+		printf("Erreur lors du chargement de l'image !\n");
+    }
+	else{
+		printf("image chargée hihi\n");
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBalle);
+	// END
 
 	float teta = 0;
 
