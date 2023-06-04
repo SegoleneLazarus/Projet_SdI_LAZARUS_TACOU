@@ -252,7 +252,7 @@ void dessinerballe(Balle balle)
 	glColor3f(100/255,10/255,10/255);
 	glRotatef(90.,0,1,0);
 	glScalef(balle.rayon,balle.rayon,balle.rayon);
-	glTranslatef(balle.zpos,balle.ypos,balle.xpos);
+	glTranslatef(balle.zpos,balle.ypos,balle.xpos);// parfois la logique elle même cesse de régenter; 
 	drawCircle();
 }
 
@@ -377,7 +377,7 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	
 }
 
-void avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle *balle)
+Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle balle)
 {
 	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien  
 	if (*clic){
@@ -387,9 +387,10 @@ void avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic
 	{
 		*avancement_depuis_dernier_clic+=0.4f;
 		*xsectionmur+=0.4f;
-		if (balle->xpos>20-balle->rayon)balle->xpos-=0.4f;
+		if (balle.xpos>=-19+balle.rayon)balle.xpos-=0.4f;
 	}
 	*clic=false;
+	return balle;
 }
 
 int main(int argc, char** argv)/////////////////////////////////////////////////////////////
@@ -579,7 +580,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			clic=true;
 		}
 		bouton=-1;
-		avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic,&balle);
+		balle = avancer(&xsectionmur,&clic,&avancement_depuis_dernier_clic,balle);
 		
 		if (xsectionmur>=80.f)xsectionmur-=80.f;
 		glPushMatrix();
