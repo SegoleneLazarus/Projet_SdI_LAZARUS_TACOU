@@ -13,9 +13,7 @@
 using namespace std;
 
 
-int nombredobstacle=5;
-Objet objettab[100];
-int nombredemur=32;
+
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 900;
@@ -48,7 +46,9 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 }
 
 float rectOpacity = 0.5f;
-
+int nombredobstacle=5;
+Objet objettab[100];
+int nombredemur=32;
 double lastMouseX = 0.0;
 double lastMouseY = 0.0;
 // Position du rectangle
@@ -59,6 +59,8 @@ bool clic=false;
 float avancement_depuis_dernier_clic=10;
 int bouton; 
 bool MEGA_DRAPEAU=true; 
+float nombre_de_vies=20;
+Objet reserve_obstacles[8];
 
 float valeur_absolue(float nombre);
 
@@ -200,13 +202,23 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 			balle.xpos+=balle.vitx;
 			if(-balle.zpos<(rectPositionY-0.6))balle.vitz-=0.1f;
             if(-balle.zpos>(rectPositionY+0.6))balle.vitz+=0.1f;
-            if(balle.ypos<(rectPositionZ-0.0))balle.vity+=0.1f;
-            if(balle.ypos>(rectPositionZ+0.6))balle.vity-=0.1f;
+            if(-balle.ypos<(rectPositionZ-0.0))balle.vity+=0.1f;
+			printf("ypos %f\n",balle.ypos);
+			printf("ypos %f\n",rectPositionZ);
+            if(-balle.ypos>(rectPositionZ+0.0))balle.vity-=0.1f;
 		}
 		else 
 		{	
 			balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
 			balle.attrapee=true;
+			nombre_de_vies-=4;
+			if (nombre_de_vies==0)
+			{
+				MEGA_DRAPEAU=true;
+				nombre_de_vies=20;
+				xsectionmur+=40;
+			}
+
 		}	
 	}
 
@@ -238,6 +250,13 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 	}
 
 	return balle;
+
+	if (balle.vity>0.4)balle.vity-=0.05;
+	if (balle.vity<-0.4)balle.vity+=0.05;
+	if (balle.vitz>0.4)balle.vitz-=0.05;
+	if (balle.vitz<-0.4)balle.vitz+=0.05;
+
+
 }
 
 void dessinerballe(Balle balle)
@@ -334,27 +353,58 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	Objet obstacle=objettab[nombredemur];
 
 	obstacle.xpos=60-xsectionmur;
-	objettab[nombredemur]=obstacle;
+	if(obstacle.xpos>=58)
+	{
+		objettab[nombredemur]=reserve_obstacles[(int)rand()%8];
+		objettab[nombredemur].xpos=obstacle.xpos;
+		objettab[nombredemur].lumiere=obstacle.lumiere;
+	}
+	else objettab[nombredemur]=obstacle;
 
 	obstacle=objettab[nombredemur+1];
 	if (xsectionmur<=70.) obstacle.xpos=50-xsectionmur;
 	else obstacle.xpos=130-xsectionmur;
-	objettab[nombredemur+1]=obstacle;
+	if(obstacle.xpos>=58)
+	{
+		objettab[nombredemur+1]=reserve_obstacles[(int)rand()%8];
+		objettab[nombredemur+1].xpos=obstacle.xpos;
+		objettab[nombredemur+1].lumiere=obstacle.lumiere;
+	}
+	else objettab[nombredemur+1]=obstacle;
+	
 		
 	obstacle=objettab[nombredemur+2];
 	if (xsectionmur<=60) obstacle.xpos=40-xsectionmur;
 	else obstacle.xpos=120-xsectionmur;
-	objettab[nombredemur+2]=obstacle;
+	if(obstacle.xpos>=58)
+	{
+		objettab[nombredemur+2]=reserve_obstacles[(int)rand()%8];
+		objettab[nombredemur+2].xpos=obstacle.xpos;
+		objettab[nombredemur+2].lumiere=obstacle.lumiere;
+	}
+	else objettab[nombredemur+2]=obstacle;
 	
 	obstacle=objettab[nombredemur+3];
 	if (xsectionmur<=50) obstacle.xpos=30-xsectionmur;
 	else obstacle.xpos=110-xsectionmur;
-	objettab[nombredemur+3]=obstacle;
+	if(obstacle.xpos>=58)
+	{
+		objettab[nombredemur+3]=reserve_obstacles[(int)rand()%8];
+		objettab[nombredemur+3].xpos=obstacle.xpos;
+		objettab[nombredemur+3].lumiere=obstacle.lumiere;
+	}
+	else objettab[nombredemur+3]=obstacle;
 
 	obstacle=objettab[nombredemur+4];
 	if (xsectionmur<=40) obstacle.xpos=20-xsectionmur;
 	else obstacle.xpos=100-xsectionmur;
-	objettab[nombredemur+4]=obstacle;
+	if(obstacle.xpos>=58)
+	{
+		objettab[nombredemur+4]=reserve_obstacles[(int)rand()%8];
+		objettab[nombredemur+4].xpos=obstacle.xpos;
+		objettab[nombredemur+4].lumiere=obstacle.lumiere;
+	}
+	else objettab[nombredemur+4]=obstacle;
 	
 }
 
@@ -538,30 +588,46 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	obstacle.rotatex=0;
 	obstacle.rotatey=1.0;
 	obstacle.rotatez=0;
-	objettab[nombredemur]=obstacle;
+	reserve_obstacles[0]=obstacle;
 
 	//moitié droite
 	obstacle.ypos=-15./4;
-	objettab[nombredemur+1]=obstacle;
+	reserve_obstacles[1]=obstacle;
 
 	//moitié basse
 	obstacle.ypos=0;
 	obstacle.zpos=-5./2;
 	obstacle.sizex=5;
 	obstacle.sizey=15;
-	objettab[nombredemur+2]=obstacle;
+	reserve_obstacles[2]=obstacle;
 
 	//moitié haute 
 	obstacle.zpos=5./2;
-	objettab[nombredemur+3]=obstacle;
+	reserve_obstacles[3]=obstacle;
+
+	//moitié haute décalée au centre
+	obstacle.zpos=0;
+	obstacle.sizex=3;
+	reserve_obstacles[7]=obstacle;
 	
 	//moitié gauche décalée au centre
 	obstacle.zpos=0;
 	obstacle.sizex=10;
-	obstacle.sizey=15./2;
+	obstacle.sizey=15./2-2;
 	objettab[nombredemur+4]=obstacle;
+	reserve_obstacles[4]=obstacle;
+	reserve_obstacles[6]=obstacle;
 
+	/*pas d'obstacle*/
+	obstacle.ypos=30;
+	obstacle.zpos=30;
+	reserve_obstacles[5]=obstacle;
+	for (int i=0;i<nombredobstacle;i++)
+	objettab[nombredemur+i]=reserve_obstacles[(int)rand()%8];
+	
 
+	
+	
 	
 	
 	// Activate transparency
