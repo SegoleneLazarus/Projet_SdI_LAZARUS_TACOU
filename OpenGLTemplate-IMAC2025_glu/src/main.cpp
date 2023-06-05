@@ -425,7 +425,7 @@ void drawBonus(float n){
 		glRotatef(teta, 0, 0, 1);
 		// glTranslatef(-40.,0,-0.);
 		glTranslatef(-0,0,-21);
-		glScalef(0.8,1.5,0.7);
+		glScalef(0.8,1,0.7);
 		drawLosange();
 	glPopMatrix();
 }
@@ -715,7 +715,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D,textures[9]);
 					glPushMatrix();
-						glColor4f(200./255.,200./255.,200./255.,1);
+						// glColor4f(200./255.,200./255.,200./255.,1);
 						glTranslatef(-20,-rectPositionZ,-rectPositionY);
 						glScalef(0.1,0.1,0.1);
 						// glTranslatef(0, xpos,ypos);
