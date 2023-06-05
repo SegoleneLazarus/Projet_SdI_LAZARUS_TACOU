@@ -29,10 +29,10 @@ void drawMur(Objet mur){
 		if(b>1)b=1;
 		if(b<0)b=0;
 		glColor3f(r,v,b);
-		glVertex3f(-0.5,-0.5,0.0);
-		glVertex3f(0.5,-0.5,0.0);
-		glVertex3f(0.5,0.5,0.0);
-		glVertex3f(-0.5,0.5,0.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-0.5,-0.5,0.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(0.5,-0.5,0.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(0.5,0.5,0.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-0.5,0.5,0.0);
 	glEnd();
 }
 
@@ -79,7 +79,7 @@ void drawSphere() {
 	gluSphere(gluNewQuadric(),1.0,NB_SEG_CIRCLE,NB_SEG_CIRCLE);
 }
 
-void drawLosange()
+void drawPyramide()
 {
     
     glBegin(GL_LINE_LOOP);
@@ -121,4 +121,58 @@ void drawLosange()
 
     glEnd();
     
+}
+
+void drawOctoedre(){
+	glBegin(GL_LINE_LOOP);
+
+    // Face 1
+    glColor3f(1.0, 0.0, 0.0);  // Rouge
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+
+    // Face 2
+    glColor3f(0.0, 1.0, 0.0);  // Vert
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    // Face 3
+    glColor3f(0.0, 0.0, 1.0);  // Bleu
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(0.0, 0.0, -1.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    // Face 4
+    glColor3f(1.0, 1.0, 0.0);  // Jaune
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, -1.0);
+
+    // Face 5
+    glColor3f(1.0, 0.0, 1.0);  // Magenta
+    glVertex3f(0.0, -1.0, 0.0);
+    glVertex3f(-1.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+
+    // Face 6
+    glColor3f(0.0, 1.0, 1.0);  // Cyan
+    glVertex3f(0.0, -1.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    // Face 7
+    glColor3f(0.5, 0.5, 0.5);  // Gris
+    glVertex3f(0.0, -1.0, 0.0);
+    glVertex3f(0.0, 0.0, -1.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    // Face 8
+    glColor3f(0.0, 0.0, 0.0);  // Noir
+    glVertex3f(0.0, -1.0, 0.0);
+    glVertex3f(-1.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, -1.0);
+
+    glEnd();
 }

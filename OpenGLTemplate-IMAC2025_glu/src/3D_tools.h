@@ -45,24 +45,27 @@ typedef struct Balle{
 } Balle;
 typedef struct Objet{
 	// char nom;
-	float xpos;
-	float ypos;
-	float zpos;
-	float r;
-	float v;
-	float b;
-	float sizex;
-	float sizey;
-	float sizez;
-	float anglerotate;
-	float rotatex;
-	float rotatey;
-	float rotatez;
-	float lumiere;
+	float xpos=0;
+	float ypos=0;
+	float zpos=0;
+	float r=0;
+	float v=0;
+	float b=0;
+	float sizex=0;
+	float sizey=0;
+	float sizez=0;
+	float anglerotate=0;
+	float rotatex=0;
+	float rotatey=0;
+	float rotatez=0;
+	float lumiere=0;
+	int position=0;//0 si haut, 1 si gauche, 2 si bas, 3 si droit
+	int bonus=0;// 0 si pas bonus, 1 si vie, 2 si colle 
 
 	Objet() {} // là un constructeur vide
 
-    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez,float lumiere) {
+    Objet(float xpos, float ypos, float zpos, float r, float v, float b, float sizex, float sizey, float sizez, float anglerotate, float rotatex, float rotatey, float rotatez,float lumiere,int bonus) {
+		this->bonus = bonus;
         this->xpos = xpos;
         this->ypos = ypos;
         this->zpos = zpos;
@@ -77,6 +80,7 @@ typedef struct Objet{
         this->rotatey = rotatey;
 		this->rotatez = rotatez;
 		this->lumiere = lumiere;
+		this->position = position;
     }
 }Objet;
 
@@ -100,7 +104,9 @@ void drawCone();
 
 void drawSphere();
 
-void drawLosange();
+void drawPyramide();
+
+void drawOctoedre();
 
 void drawMur(Objet mur);
 

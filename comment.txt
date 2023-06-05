@@ -1,7 +1,7 @@
 balle : cercle avec une texture -> gérer la perspective (automatique
 raquette : littéralement un carré vide (fonction carré OU fonction glPoints mais pas vraiment)
 	OK positionnée par rapport à la souris -> glfwGetCursorPos OK
-	AF lancer la balle au clic
+	OK lancer la balle au clic
 OK corridor : rectangles*4 + contours rectangle blanc qui avancent OK
 
 OK la balle atteint une limite quand envoyée parfaitement OK
@@ -35,9 +35,9 @@ Etapes :
  OK - Déplacement de la balle (rebond balle OK et rebond balle raquette en fonction de position raquette/balle OK )  OK 
  OK - implémenter la situtation : la raquette tient la balle OK
  OK - implémenter les vies OK
- AF - implémenter les bonus AF
- AC - implémenter les textures AC
- AC - le menu AC
+ AC - implémenter les bonus AC
+ OK - implémenter les textures OK
+ OK - le menu OK
  
 
 AF Diviser les fichiers :  AF
