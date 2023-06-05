@@ -7,12 +7,20 @@
 #include <math.h>
 #include <string>
 #include "3D_tools.h"
+#include "dessins.h"
+#include "balle.h"
+#include "variables.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 using namespace std;
 
+bool clic=false;
+double lastMouseX = 0.0;
+double lastMouseY = 0.0;
+float rectOpacity = 0.5f;
 
-
+Balle balle=Balle(-19,-5,-2,-0.4,0.2,0.2,true,1);
+Objet reserve_obstacles[nombre_reserve_obstacle];
 
 /* Window properties */
 static const unsigned int WINDOW_WIDTH = 1100;
@@ -44,32 +52,14 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-float teta = 0;
-float rectOpacity = 0.5f;
-int nombredobstacle=8;
-Objet objettab[100];
-int nombredemur=32;
-double lastMouseX = 0.0;
-double lastMouseY = 0.0;
-// Position du rectangle
-float rectPositionZ = 0.0f;
-float rectPositionY = 0.0f;
-float xsectionmur = 0;
-bool clic=false;
-float avancement_depuis_dernier_clic=10;
-int bouton; 
-int MEGA_DRAPEAU=0; 
-float nombre_de_vies=20;
-const int nombre_reserve_obstacle=10;
-Objet reserve_obstacles[nombre_reserve_obstacle];
-float avancement_total=0;
+
 
 float valeur_absolue(float nombre);
 
 // Sensibilité du mouvement de la souris
 const float SENSITIVITY = 0.02f;
 
-Balle attraperballe (Balle balle, float rectPositionY,float rectPositionZ);
+
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -162,184 +152,6 @@ float valeur_absolue(float nombre)
 	return sqrt(nombre*nombre);
 }
 
-Balle balle=Balle(-19,-5,-2,-0.4,0.2,0.2,true,1);
-
-Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWwindow* window,double* xposmousebuttoncallback,double*yposmousebuttoncallback)
-{
-	if(balle.attrapee)
-	{
-		bouton=-1;
-		balle=attraperballe(balle,-rectPositionZ,-rectPositionY);
-			
-		bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_RIGHT); //
-		if (bouton==GLFW_PRESS)
-		{
-			bouton=-1;
-			balle.attrapee=false;
-			balle.vitx=0.4f;
-			balle.xpos=-19+balle.rayon;
-			balle.xpos+=balle.vitx;
-		}
-		return balle;
-	}
-
-	if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
-	{
-		balle.vity=-balle.vity;
-		balle.ypos+=balle.vity;
-	}
-	if (balle.zpos>=5-balle.rayon || balle.zpos<=-5+balle.rayon)
-	{
-		balle.vitz=-balle.vitz;
-		balle.zpos+=balle.vitz;
-	}
-
-	if (balle.xpos<=-19+balle.rayon)
-	{
-		if (balle.zpos < (rectPositionY + 3.5) && balle.zpos > (rectPositionY - 3.5) && balle.ypos < (-rectPositionZ + 3.5) && balle.ypos > (-rectPositionZ - 3.5))
-		{
-			balle.vitx = -balle.vitx;
-			balle.xpos += balle.vitx;
-
-			float distanceFromCenter = balle.ypos + rectPositionZ; // Calcul de la distance entre la position de la balle et le centre de la raquette
-			float distanceFromCenterz= balle.zpos + rectPositionY;
-			balle.vity += distanceFromCenter * 0.03f;
-			balle.vitz -= distanceFromCenterz * 0.03f;
-		}	
-		else 
-		{	
-			balle=attraperballe(balle,-rectPositionZ,-rectPositionY);
-			balle.attrapee=true;
-			nombre_de_vies-=4;
-			if (nombre_de_vies==0)
-			{
-				MEGA_DRAPEAU=0;
-				avancement_total=0;
-				nombre_de_vies=20;
-				xsectionmur+=40;
-				balle.attrapee=true;
-			}
-
-		}	
-	}
-
-	// mtn avec les obstacles : on va considérer que la balle rebondit sur les obstacles comme si elle était un carré (sans compter les rebonds bizarres sur les coins) 
-	for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
-	{
-		Objet obstacle=objettab[i];
-		float hauteur=obstacle.sizex;
-		float largeur=obstacle.sizey;
-		float centrey=obstacle.ypos;
-		float centrez=obstacle.zpos;
-		float posy=balle.ypos;
-		float posz=-balle.zpos;
-		float rayon=balle.rayon;
-		if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
-		{
-			if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
-			{
-				if (obstacle.bonus==0)
-				{
-					balle.vitx=-balle.vitx;
-					balle.xpos+=balle.vitx;
-				}
-				
-			}
-		}
-
-		//retiré car marche trop mal 
-
-		// Vérification si la balle est au même niveau que l'obstacle selon l'axe x
-		// if (balle.xpos-balle.rayon<objettab[i].xpos && balle.xpos+balle.rayon>objettab[i].xpos && obstacle.bonus==0)
-		// {
-		// 	// Vérification si la balle touche le bord vertical de l'obstacle
-		// 	if ((balle.ypos + balle.rayon >= obstacle.ypos - obstacle.sizey / 2 && balle.ypos - balle.rayon <= obstacle.ypos - obstacle.sizey / 2 )||( balle.ypos - balle.rayon <= obstacle.ypos + obstacle.sizey / 2 && balle.ypos + balle.rayon >= obstacle.ypos + obstacle.sizey / 2))
-		// 	{
-		// 		balle.vity = -balle.vity; // Inversion de la vitesse verticale
-		// 	}
-
-		// 	// Vérification si la balle touche le bord horizontal de l'obstacle
-		// 	if ((balle.zpos + balle.rayon >= obstacle.zpos - obstacle.sizez / 2 && balle.zpos - balle.rayon <= obstacle.zpos - obstacle.sizez / 2 )||( balle.zpos - balle.rayon <= obstacle.zpos + obstacle.sizez / 2 && balle.zpos + balle.rayon >= obstacle.zpos + obstacle.sizez / 2))
-		// 	{
-		// 		balle.vitz = -balle.vitz; // Inversion de la vitesse horizontale
-		// 	}
-		// }
-
-	}
-	
-	if (balle.xpos>=19)balle.vitx=-balle.vitx;
-	if (balle.attrapee==false)
-	{
-	balle.xpos+=balle.vitx;
-	balle.ypos+=balle.vity;
-	balle.zpos+=balle.vitz;
-	}
-
-	if (balle.vity>0.4)balle.vity-=0.01;
-	if (balle.vity<-0.4)balle.vity+=0.01;
-	if (balle.vitz>0.4)balle.vitz-=0.01;
-	if (balle.vitz<-0.4)balle.vitz+=0.01;
-
-	return balle;
-
-	
-}
-
-void dessinerballe(Balle balle)
-{
-	glColor3f(100/255,10/255,10/255);
-	glRotatef(90.,0,1,0);
-	// glScalef(balle.rayon,balle.rayon,balle.rayon);
-	glTranslatef(balle.zpos,balle.ypos,balle.xpos-1);// parfois la logique elle même cesse de régenter; 
-	drawCarre();
-}
-
-void dessinersectionmur()
-{
-	// rect Haut
-		glPushMatrix();
-			glColor3f(100/255,10/255,10/255);
-			glTranslatef(0,0,4.9);
-			glScalef(1./2.,15,1);
-			drawSquare();
-		glPopMatrix();
-		// rect Bas
-		glPushMatrix();
-			glColor3f(100/255,10/255,10/255);
-			glTranslatef(0,0,-5+0.1);
-			glScalef(1./2.,15,1);
-			drawSquare();
-		glPopMatrix();		
-
-		// rect Droit
-		glPushMatrix();
-			glColor3f(100/255,10/255,10/255);
-			glTranslatef(0,15./2.-0.1,0);
-			glRotatef(90.0,1.,0.,0.);			
-
-			glScalef(1./2.,10,1);
-			
-			drawSquare();
-		glPopMatrix();	
-
-		// rect Gauche
-		glPushMatrix();
-			glColor3f(100/255,10/255,10/255);
-			glTranslatef(0,-15./2.+0.1,0);
-			glRotatef(90.0,1.,0.,0.);
-			glScalef(1./2.,10,1);
-			drawSquare();
-		glPopMatrix();
-}
-
-void dessinerRaquette(){
-		glPushMatrix();
-			glRotatef(90.0,0.,1.,0.);
-			glTranslatef(-4./3.,0,0);
-			glScalef(4,4,2);
-			drawSquare();
-		glPopMatrix();
-}
 
 
 
@@ -362,16 +174,7 @@ int 	button
 );	
 
 
-Balle attraperballe (Balle balle, float rectPositionY,float rectPositionZ)
-{
-	balle.vitx=0;
-	balle.vity=0;
-	balle.vitz=0;
-	balle.xpos=-18.5;
-	balle.ypos=rectPositionY;
-	balle.zpos=-rectPositionZ;
-	return balle;
-}
+
 
 void deplacementobstacles(float xsectionmur,int nombredemur)
 {
@@ -396,125 +199,10 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	}
 }
 
-void dessinVie(){
-	glColor3f(0/255,0/255,0/255);
-	glPushMatrix();
-			glRotatef(90.0,0.,1.,0.);
-			glTranslatef(-4,9,-20);
-			glScalef(0.8,1.5,0.7);
-			drawCarre();
-	glPopMatrix();
-}
-
-void drawBonusVie(Objet bonus){
-	glColor3f(200/255,200/255,200/255);
-	glRotatef(90.0,0.,1.,0.);
-	glPushMatrix();
-		glRotatef(teta, 0, 0, 1);
-		glTranslatef(bonus.zpos,bonus.ypos,bonus.xpos);
-		glScalef(1.2,1.2,1.2);
-		drawPyramide();
-	glPopMatrix();
-}
-
-void drawBonusColle(Objet bonus){
-	glColor3f(200/255,200/255,200/255);
-	glRotatef(90.0,0.,1.,0.);
-	glPushMatrix();
-		glRotatef(teta, 0, 0, 1);
-		glTranslatef(bonus.zpos,bonus.ypos,bonus.xpos);
-		glScalef(1.2,1.2,1.2);
-		drawOctoedre();
-	glPopMatrix();
-}
-
-void drawEcranAccueil(){
-
-	glColor3f(100/255,100/255,100/255);
-	glPushMatrix();
-		glRotatef(90.0,0.,1.,0.);
-		glTranslatef(0.,0,-20.);
-		glScalef(3.,8,2);
-		drawCarre();
-	glPopMatrix();
-}
-
-void drawEcranFin(){
-
-	glColor3f(100/255,100/255,100/255);
-	glPushMatrix();
-		glRotatef(90.0,0.,1.,0.);
-		glTranslatef(0.,0,-20.);
-		glScalef(4.,8,2);
-		drawCarre();
-	glPopMatrix();
-}
 
 
-Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle balle)
-{
-	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien 
-	if (not balle.attrapee)
-	{
-		if (*xsectionmur>=80.f)*xsectionmur-=80.f;
-		if (*clic){
-		*avancement_depuis_dernier_clic=0;
-		}
-		if(*avancement_depuis_dernier_clic<10)
-		{
-			*avancement_depuis_dernier_clic+=0.4f;
-			*xsectionmur+=0.4f;
-			avancement_total+=0.4f;
-			if (avancement_total>=250)
-			{
-				*xsectionmur+=40;
-				avancement_total=0;
-				nombre_de_vies=20;
-				balle.attrapee=true;
-				MEGA_DRAPEAU=2;
-			}
-			bool flag_obstacle=false;
-			for (int i=nombredemur;i<nombredemur+nombredobstacle;i++)
-			{
-				Objet obstacle=objettab[i];
-				float hauteur=obstacle.sizex;
-				float largeur=obstacle.sizey;
-				float centrey=obstacle.ypos;
-				float centrez=obstacle.zpos;
-				float posy=balle.ypos;
-				float posz=balle.zpos;
-				float rayon=balle.rayon;
-				if (obstacle.bonus!=0)
-				{
-					if (obstacle.zpos < (rectPositionY + 3.5) && obstacle.zpos > (rectPositionY - 3.5) && obstacle.ypos < (-rectPositionZ + 3.5) && obstacle.ypos > (-rectPositionZ - 3.5) && obstacle.xpos<=-19.5 && obstacle.xpos>=-20)
-					{
-						if(obstacle.bonus==1)
-						{
-							if(nombre_de_vies<20)nombre_de_vies+=4;
-						}
-						else balle.attrapee=true;
-					}
-				}
-				else
-				{
-					if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
-					{
-						if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
-						{
-							flag_obstacle=true;
-						}
-					}
-				}
-				
-			}
-			if (balle.xpos>=-19+balle.rayon && not flag_obstacle)balle.xpos-=0.4f;
-		}
-	
-		*clic=false;
-	}
-	return balle;
-	
-}
+
+
 
 GLuint genTexture(char* filePath){
 		// stbi_set_flip_vertically_on_load(true);
@@ -564,10 +252,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	glPointSize(5.0);
 	glEnable(GL_DEPTH_TEST);
-
-	
-
-	
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -693,17 +377,11 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	for (int i=0;i<nombredobstacle;i++) objettab[nombredemur+i]=reserve_obstacles[(int)rand()%nombre_reserve_obstacle];
 	
-
-	
-	
-	
-	
 	// Activate transparency
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// TEXTUREs
-
 	/*preparation des textures */
 	GLuint textures[15];
 	char filePath[]="../doc/nerd.png";
@@ -766,8 +444,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		
 		/* Initial scenery setup */
 		
-			
-
 		if(MEGA_DRAPEAU==0)
 		{
 			/*menu*/
@@ -819,9 +495,6 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 				glBindTexture(GL_TEXTURE_2D, 0);
 			glDisable(GL_TEXTURE_2D);
 
-			
-			
-			
 			//printf("Y %f\n",-rectPositionZ);
 			//printf("Z %f\n",-rectPositionY);
 
@@ -981,13 +654,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			
 			default:
 				break;
-			}
-
-			// bonus test
-			// glPushMatrix();
-			// 	drawBonusVie(-xsectionmur);
-			// glPopMatrix();
-			
+			}			
 
 			//balle 
 			glEnable(GL_TEXTURE_2D);
@@ -1092,16 +759,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		}
 	}
 
-	//draw
-	// stbi_image_free(imageBalle);
-	// stbi_image_free(imageMenu);
-	// glDeleteTextures(1, &tex1);
-	// glDeleteTextures(2, &tex2);
-
 	glDisable(GL_BLEND);
 	
-	
-
 	glfwTerminate();
 	return 0;
 }
