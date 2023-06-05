@@ -235,6 +235,7 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		float posz=-balle.zpos;
 		float rayon=balle.rayon;
 		if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2)// ca veut dire que la balle est devant ou derrière le mur ; 
+		{
 			if((balle.xpos+rayon>=obstacle.xpos && balle.xpos<=obstacle.xpos) || (balle.xpos-rayon<=obstacle.xpos && balle.xpos>=obstacle.xpos)) // la balle touche ou pénètre le mur de par un côté où de l'autre
 			{
 				if (obstacle.bonus==0)
@@ -244,6 +245,26 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 				}
 				
 			}
+		}
+
+		//retiré car marche trop mal 
+
+		// Vérification si la balle est au même niveau que l'obstacle selon l'axe x
+		// if (balle.xpos-balle.rayon<objettab[i].xpos && balle.xpos+balle.rayon>objettab[i].xpos && obstacle.bonus==0)
+		// {
+		// 	// Vérification si la balle touche le bord vertical de l'obstacle
+		// 	if ((balle.ypos + balle.rayon >= obstacle.ypos - obstacle.sizey / 2 && balle.ypos - balle.rayon <= obstacle.ypos - obstacle.sizey / 2 )||( balle.ypos - balle.rayon <= obstacle.ypos + obstacle.sizey / 2 && balle.ypos + balle.rayon >= obstacle.ypos + obstacle.sizey / 2))
+		// 	{
+		// 		balle.vity = -balle.vity; // Inversion de la vitesse verticale
+		// 	}
+
+		// 	// Vérification si la balle touche le bord horizontal de l'obstacle
+		// 	if ((balle.zpos + balle.rayon >= obstacle.zpos - obstacle.sizez / 2 && balle.zpos - balle.rayon <= obstacle.zpos - obstacle.sizez / 2 )||( balle.zpos - balle.rayon <= obstacle.zpos + obstacle.sizez / 2 && balle.zpos + balle.rayon >= obstacle.zpos + obstacle.sizez / 2))
+		// 	{
+		// 		balle.vitz = -balle.vitz; // Inversion de la vitesse horizontale
+		// 	}
+		// }
+
 	}
 	
 	if (balle.xpos>=19)balle.vitx=-balle.vitx;
@@ -347,8 +368,8 @@ Balle attraperballe (Balle balle, float rectPositionY,float rectPositionZ)
 	balle.vity=0;
 	balle.vitz=0;
 	balle.xpos=-18.5;
-	balle.ypos=-rectPositionZ;
-	balle.zpos=rectPositionY;
+	balle.ypos=rectPositionY;
+	balle.zpos=-rectPositionZ;
 	return balle;
 }
 
@@ -365,7 +386,7 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 			objettab[nombredemur+i]=reserve_obstacles[(int)rand()%nombre_reserve_obstacle];
 			if(objettab[nombredemur+i].bonus==1 || objettab[nombredemur+i].bonus==2)
 			{
-				objettab[nombredemur+i].ypos=6-rand()%15;
+				objettab[nombredemur+i].ypos=6-rand()%12;
 				objettab[nombredemur+i].zpos=4-rand()%8;
 			}
 			objettab[nombredemur+i].xpos=obstacle.xpos;
@@ -465,7 +486,7 @@ Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_cli
 				float rayon=balle.rayon;
 				if (obstacle.bonus!=0)
 				{
-					if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2 && obstacle.xpos<=19.4)
+					if (obstacle.zpos < (rectPositionY + 3.5) && obstacle.zpos > (rectPositionY - 3.5) && obstacle.ypos < (-rectPositionZ + 3.5) && obstacle.ypos > (-rectPositionZ - 3.5) && obstacle.xpos<=-19.5 && obstacle.xpos>=-20)
 					{
 						if(obstacle.bonus==1)
 						{
@@ -491,7 +512,6 @@ Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_cli
 	
 		*clic=false;
 	}
-	else balle=attraperballe(balle,rectPositionY,rectPositionZ);
 	return balle;
 	
 }
@@ -756,7 +776,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D,textures[9]);
 					glPushMatrix();
-						glTranslatef(-20,-rectPositionZ,-rectPositionY);
+						glTranslatef(-20,-rectPositionZ,-rectPositionY-1);
 						glScalef(0.1,0.1,0.1);
 						dessinerRaquette();
 					glPopMatrix();
@@ -989,7 +1009,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			//raquette 
 			glPushMatrix();
 				glColor4f(10/255,10/255,10/255,rectOpacity);
-				glTranslatef(-20,-rectPositionZ,-rectPositionY);
+				glTranslatef(-20,-rectPositionZ,-rectPositionY-1);
 				// glTranslatef(0, xpos,ypos);
 				dessinerRaquette();
 			glPopMatrix();
@@ -1000,7 +1020,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 				glBindTexture(GL_TEXTURE_2D,textures[9]);
 					glPushMatrix();
 						// glColor4f(200./255.,200./255.,200./255.,1);
-						glTranslatef(-20,-rectPositionZ,-rectPositionY);
+						glTranslatef(-20,-rectPositionZ,-rectPositionY-1);
 						glScalef(0.1,0.1,0.1);
 						// glTranslatef(0, xpos,ypos);
 						dessinerRaquette();
