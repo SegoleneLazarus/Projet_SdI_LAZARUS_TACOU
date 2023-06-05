@@ -201,8 +201,8 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		{
 			balle.vitx=-balle.vitx;
 			balle.xpos+=balle.vitx;
-			if(-balle.zpos<(rectPositionY-0.6))balle.vitz-=0.1f;
-            if(-balle.zpos>(rectPositionY+0.6))balle.vitz+=0.1f;
+			if(-balle.zpos<(rectPositionY-0.0))balle.vitz-=0.1f;
+            if(-balle.zpos>(rectPositionY+0.0))balle.vitz+=0.1f;
             if(-balle.ypos<(rectPositionZ-0.0))balle.vity+=0.1f;
 			printf("ypos %f\n",balle.ypos);
 			printf("ypos %f\n",rectPositionZ);
