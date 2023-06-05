@@ -169,8 +169,8 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 	if(balle.attrapee)
 	{
 		bouton=-1;
-			balle=attraperballe(balle,-rectPositionZ,-rectPositionY);
-			return balle;
+		balle=attraperballe(balle,-rectPositionZ,-rectPositionY);
+			
 		bouton = glfwGetMouseButton	(window,GLFW_MOUSE_BUTTON_RIGHT); //
 		if (bouton==GLFW_PRESS)
 		{
@@ -180,12 +180,7 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 			balle.xpos=-19+balle.rayon;
 			balle.xpos+=balle.vitx;
 		}
-		// else 
-		// {
-		// 	bouton=-1;
-		// 	balle=attraperballe(window,xposmousebuttoncallback,yposmousebuttoncallback,balle,-rectPositionZ,-rectPositionY);
-		// 	return balle;
-		// }
+		return balle;
 	}
 
 	if (balle.ypos>=15./2-balle.rayon || balle.ypos<=-15./2+balle.rayon)
@@ -201,15 +196,6 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 
 	if (balle.xpos<=-20+balle.rayon)
 	{
-		// if(balle.zpos<(rectPositionY)+3.5 && balle.zpos>(rectPositionY)-3.5 && balle.ypos<(-rectPositionZ)+3.5 && balle.ypos>(-rectPositionZ)-3.5)// test si la balle touche la raquette 
-		// {
-		// 	balle.vitx=-balle.vitx;
-		// 	balle.xpos+=balle.vitx;
-		// 	if(-balle.zpos<(rectPositionY-0.0))balle.vitz-=0.1f;
-        //     if(-balle.zpos>(rectPositionY+0.0))balle.vitz+=0.1f;
-        //     if(-balle.ypos<(rectPositionZ-0.0))balle.vity+=0.1f;
-        //     if(-balle.ypos>(rectPositionZ+0.0))balle.vity-=0.1f;
-		// }
 		if (balle.zpos < (rectPositionY + 3.5) && balle.zpos > (rectPositionY - 3.5) && balle.ypos < (-rectPositionZ + 3.5) && balle.ypos > (-rectPositionZ - 3.5))
 		{
 			balle.vitx = -balle.vitx;
@@ -217,8 +203,8 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 
 			float distanceFromCenter = balle.ypos + rectPositionZ; // Calcul de la distance entre la position de la balle et le centre de la raquette
 			float distanceFromCenterz= balle.zpos + rectPositionY;
-			balle.vity += distanceFromCenter * 0.05f;
-			balle.vitz -= distanceFromCenterz * 0.05f;
+			balle.vity += distanceFromCenter * 0.03f;
+			balle.vitz -= distanceFromCenterz * 0.03f;
 		}	
 		else 
 		{	
@@ -447,8 +433,6 @@ void drawEcranFin(){
 Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_clic,Balle balle)
 {
 	//quand le joueur clic gauche, le jeu avance de 5 unité mais en combien de temps? lors du clic on passe un bool à vrai, on créer une variable avancement qui lorsqu'elle atteint 5 est remise à 0 et passe le bool à faux alors xsectionmur arrête d'avancer, si on clic pendant l'avancement cela ne fait rien 
-	if(balle.attrapee) 
-	printf("Zoom is %f\n",balle.attrapee);
 	if (not balle.attrapee)
 	{
 		if (*xsectionmur>=80.f)*xsectionmur-=80.f;
@@ -483,7 +467,10 @@ Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_cli
 				{
 					if (posy-rayon<centrey+largeur/2 && posy+rayon>centrey-largeur/2 && posz+rayon>centrez-hauteur/2 && posz-rayon<centrez+hauteur/2 && obstacle.xpos<=19.4)
 					{
-						if(obstacle.bonus==1 && nombre_de_vies<20)nombre_de_vies+=4;
+						if(obstacle.bonus==1)
+						{
+							if(nombre_de_vies<20)nombre_de_vies+=4;
+						}
 						else balle.attrapee=true;
 					}
 				}
