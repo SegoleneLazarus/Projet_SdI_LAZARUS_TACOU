@@ -194,7 +194,7 @@ Balle deplacementballe(Balle balle,float rectPositionY,float rectPositionZ,GLFWw
 		balle.zpos+=balle.vitz;
 	}
 
-	if (balle.xpos<=-20+balle.rayon)
+	if (balle.xpos<=-19+balle.rayon)
 	{
 		if (balle.zpos < (rectPositionY + 3.5) && balle.zpos > (rectPositionY - 3.5) && balle.ypos < (-rectPositionZ + 3.5) && balle.ypos > (-rectPositionZ - 3.5))
 		{
