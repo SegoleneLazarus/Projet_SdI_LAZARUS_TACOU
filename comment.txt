@@ -32,7 +32,7 @@ Etapes :
  OK - Déplacement des sections du mur (boucle) OK
  OK - Déplacement de la raquette (OUI) OK
  OK - création liste d'obstacles OK
- AC - Déplacement de la balle (rebond balle AC et rebond balle raquette en fonction de position raquette/balle AF )  AC 
+ OK - Déplacement de la balle (rebond balle OK et rebond balle raquette en fonction de position raquette/balle OK )  OK 
  OK - implémenter la situtation : la raquette tient la balle OK
  OK - implémenter les vies OK
  AF - implémenter les bonus AF

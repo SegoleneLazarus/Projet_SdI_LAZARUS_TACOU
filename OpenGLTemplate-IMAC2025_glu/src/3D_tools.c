@@ -78,3 +78,47 @@ void drawCone() {
 void drawSphere() {
 	gluSphere(gluNewQuadric(),1.0,NB_SEG_CIRCLE,NB_SEG_CIRCLE);
 }
+
+void drawLosange()
+{
+    
+    glBegin(GL_LINE_LOOP);
+
+    // Face avant
+    glColor3f(1.0, 0.0, 0.0);  // Rouge
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+    glVertex3f(1.0, -1.0, 1.0);
+
+    // Face droite
+    glColor3f(0.0, 1.0, 0.0);  // Vert
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(1.0, -1.0, 1.0);
+    glVertex3f(1.0, -1.0, -1.0);
+
+    // Face arrière
+    glColor3f(0.0, 0.0, 1.0);  // Bleu
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(1.0, -1.0, -1.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+
+    // Face gauche
+    glColor3f(1.0, 1.0, 0.0);  // Jaune
+    glVertex3f(0.0, 1.0, 0.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+
+    // Base
+    glColor3f(0.0, 1.0, 1.0);  // Cyan
+    glVertex3f(-1.0, -1.0, 1.0);
+    glVertex3f(1.0, -1.0, 1.0);
+    glVertex3f(1.0, -1.0, -1.0);
+
+    glColor3f(1.0, 0.0, 1.0);  // Magenta
+    glVertex3f(1.0, -1.0, -1.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+
+    glEnd();
+    
+}

@@ -100,6 +100,8 @@ void drawCone();
 
 void drawSphere();
 
+void drawLosange();
+
 void drawMur(Objet mur);
 
 /* Small tools */

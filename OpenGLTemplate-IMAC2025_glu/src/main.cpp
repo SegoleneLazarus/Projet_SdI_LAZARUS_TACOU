@@ -45,6 +45,7 @@ void onWindowResized(GLFWwindow* window, int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
+float teta = 0;
 float rectOpacity = 0.5f;
 int nombredobstacle=5;
 Objet objettab[100];
@@ -315,15 +316,6 @@ void dessinerRaquette(){
 		glPopMatrix();
 }
 
-void dessinVie(){
-	glColor3f(0/255,0/255,0/255);
-	glPushMatrix();
-			glRotatef(90.0,0.,1.,0.);
-			glTranslatef(-4,9,-20);
-			glScalef(0.8,1.5,0.7);
-			drawCarre();
-		glPopMatrix();
-}
 
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -415,6 +407,28 @@ void deplacementobstacles(float xsectionmur,int nombredemur)
 	
 }
 
+void dessinVie(){
+	glColor3f(0/255,0/255,0/255);
+	glPushMatrix();
+			glRotatef(90.0,0.,1.,0.);
+			glTranslatef(-4,9,-20);
+			glScalef(0.8,1.5,0.7);
+			drawCarre();
+		glPopMatrix();
+}
+
+
+void drawBonus(float n){
+	glColor3f(200/255,200/255,200/255);
+	glRotatef(90.0,0.,1.,0.);
+	glPushMatrix();
+		glRotatef(teta, 0, 0, 1);
+		// glTranslatef(-40.,0,-0.);
+		glTranslatef(-0,0,-21);
+		glScalef(0.8,1.5,0.7);
+		drawLosange();
+	glPopMatrix();
+}
 
 void drawEcranAccueil(){
 
@@ -517,7 +531,7 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 
 	
 
-	float teta = 0;
+	
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -904,10 +918,11 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			default:
 				break;
 			}
-			// if(nombre_de_vies==20){
-				
-			// }
-			
+
+			// bonus test
+			glPushMatrix();
+				drawBonus(0);
+			glPopMatrix();
 			
 
 			//balle 
@@ -952,8 +967,8 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 		}
 
 		/* Animate scenery */
-		teta+=0.03;
-		//teta+=0.1;
+		teta+=1.;
+		// teta+=0.1;
 		double tempspasse = glfwGetTime() - startTime;
 
 		while(tempspasse < FRAMERATE_IN_SECONDS){
