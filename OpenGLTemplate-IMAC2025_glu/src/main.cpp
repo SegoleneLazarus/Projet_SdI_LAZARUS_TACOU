@@ -16,7 +16,7 @@ using namespace std;
 
 
 /* Window properties */
-static const unsigned int WINDOW_WIDTH = 900;
+static const unsigned int WINDOW_WIDTH = 1100;
 static const unsigned int WINDOW_HEIGHT = 600;
 static const char WINDOW_TITLE[] = "Couloir de lumière";
 static float aspectRatio = 1.0;
@@ -307,14 +307,21 @@ void dessinersectionmur()
 }
 
 void dessinerRaquette(){
-
-		
 		glPushMatrix();
-			
 			glRotatef(90.0,0.,1.,0.);
 			glTranslatef(-4./3.,0,0);
 			glScalef(4.,4,2);
 			drawSquare();
+		glPopMatrix();
+}
+
+void dessinVie(){
+	glColor3f(0/255,0/255,0/255);
+	glPushMatrix();
+			glRotatef(90.0,0.,1.,0.);
+			glTranslatef(-4,9,-20);
+			glScalef(0.8,1.3,0.5);
+			drawCarre();
 		glPopMatrix();
 }
 
@@ -637,47 +644,33 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 	// TEXTUREs
 
 	/*preparation des textures */
-	GLuint textures[3];
+	GLuint textures[9];
 	char filePath[]="../doc/logo_Gavroche.png";
 	char filePath2[]="../doc/bouton_commencer.png";
 	char filePath3[]="../doc/commencer.png";
+
+	char filePath4[]="../doc/2020.png";
+	char filePath5[]="../doc/1620.png";
+	char filePath6[]="../doc/1220.png";
+	char filePath7[]="../doc/0820.png";
+	char filePath8[]="../doc/0420.png";
+	char filePath9[]="../doc/0020.png";
+
+	char filePath10[]="../doc/souris.png";
+
 	textures[0]=genTexture(filePath);
 	textures[1]=genTexture(filePath2);
 	textures[2]=genTexture(filePath3);
 
+	textures[3]=genTexture(filePath4);
+	textures[4]=genTexture(filePath5);
+	textures[5]=genTexture(filePath6);
+	textures[6]=genTexture(filePath7);
+	textures[7]=genTexture(filePath8);
+	textures[8]=genTexture(filePath9);
 
-	/*GLuint tex1;
-	glGenTextures(1, &tex1);
-	glBindTexture(GL_TEXTURE_2D, tex1);
-
-	GLuint tex2;
-	glGenTextures(1, &tex2);
-	glBindTexture(GL_TEXTURE_2D, tex2);
-
-	int x,y,n;
-
-	// texture1 Balle
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	unsigned char* imageBalle = stbi_load("../doc/logo_Gavroche.png",&x, &y, &n, 0);
-	if (imageBalle == NULL) {
-		printf("Erreur lors du chargement de l'image !\n");
-    }
-	else{
-		printf("image balle chargée hihi\n");
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageBalle);
-
-	// //texture2 Menu
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	unsigned char* imageMenu = stbi_load("../doc/bouton_commencer.jpg",&x, &y, &n, 0);
-	if (imageMenu == NULL) {
-		printf("Erreur lors du chargement de l'image !\n");
-    }
-	else{
-		printf("image menu chargée hihi\n");
-	}
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageMenu);*/
-	// END
+	textures[9]=genTexture(filePath10);
+	
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -705,14 +698,19 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 			/*menu*/
 			//ecran accueil
 
-			
-			glPushMatrix();
-				glColor4f(200./255.,200./255.,200./255.,rectOpacity);
-				glTranslatef(-20,-rectPositionZ,-rectPositionY);
-				glScalef(0.1,0.1,0.1);
-				// glTranslatef(0, xpos,ypos);
-				dessinerRaquette();
-			glPopMatrix();
+			glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D,textures[9]);
+					glPushMatrix();
+						glColor4f(200./255.,200./255.,200./255.,1);
+						glTranslatef(-20,-rectPositionZ,-rectPositionY);
+						glScalef(0.1,0.1,0.1);
+						// glTranslatef(0, xpos,ypos);
+						dessinerRaquette();
+					glPopMatrix();
+
+				glBindTexture(GL_TEXTURE_2D, 0);
+			glDisable(GL_TEXTURE_2D);
+
 			float Zsouris=-rectPositionY;
 			float Ysouris=-rectPositionZ;
 			if (Ysouris<8 && Ysouris>-8 && Zsouris>-2.5 && Zsouris<2.5)
@@ -826,6 +824,91 @@ int main(int argc, char** argv)/////////////////////////////////////////////////
 				else glTranslatef(70-xsectionmur,0,0);
 				dessinersectionmur();
 			glPopMatrix();
+
+
+			// score
+			switch (static_cast<int>(nombre_de_vies))
+			{
+			case 20:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[3]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+
+			case 16:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[4]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+
+			case 12:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[5]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+
+			case 8:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[6]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+
+			case 4:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[7]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+
+			case 0:
+				glEnable(GL_TEXTURE_2D);
+
+					glBindTexture(GL_TEXTURE_2D,textures[8]);
+						glPushMatrix();
+							dessinVie();
+						glPopMatrix();
+					glBindTexture(GL_TEXTURE_2D, 0);
+
+				glDisable(GL_TEXTURE_2D);
+				break;
+			
+			default:
+				break;
+			}
+			// if(nombre_de_vies==20){
+				
+			// }
+			
+			
 
 			//balle 
 			glEnable(GL_TEXTURE_2D);
