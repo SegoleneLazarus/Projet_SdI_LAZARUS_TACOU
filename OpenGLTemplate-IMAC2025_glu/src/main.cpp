@@ -320,7 +320,7 @@ void dessinVie(){
 	glPushMatrix();
 			glRotatef(90.0,0.,1.,0.);
 			glTranslatef(-4,9,-20);
-			glScalef(0.8,1.3,0.5);
+			glScalef(0.8,1.5,0.7);
 			drawCarre();
 		glPopMatrix();
 }
