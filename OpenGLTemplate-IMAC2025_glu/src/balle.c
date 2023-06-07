@@ -9,7 +9,7 @@ Balle attraperballe (Balle balle, float rectPositionY,float rectPositionZ)
 	balle.vitx=0;
 	balle.vity=0;
 	balle.vitz=0;
-	balle.xpos=-18.5;
+	balle.xpos=-17;
 	balle.ypos=rectPositionY;
 	balle.zpos=-rectPositionZ;
 	return balle;
@@ -193,7 +193,7 @@ Balle avancer(float *xsectionmur,bool *clic,float *avancement_depuis_dernier_cli
 				}
 				
 			}
-			if (balle.xpos>=-19+balle.rayon && not flag_obstacle)balle.xpos-=0.4f;
+			if (balle.xpos>=-18+balle.rayon && not flag_obstacle)balle.xpos-=0.4f;
 		}
 	
 		*clic=false;
